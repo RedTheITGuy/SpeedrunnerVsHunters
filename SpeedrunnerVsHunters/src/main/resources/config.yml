@@ -1,0 +1,2 @@
+# Wether or not to save games through reboots
+persistantSave: false
