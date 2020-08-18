@@ -1,6 +1,6 @@
 name: SpeedrunnerVsHunters
-version: 0.1
-description: "The plugin to run the logic for the speedrunner vs hunters Minecraft gamemode."
+version: 0.2
+description: The plugin to run the logic for the speedrunner vs hunters Minecraft gamemode.
 main: me.RedTheITGuy.SpeedrunnerVsHunters.Main
 api-version: 1.16
 author: Red_the_IT_Guy
