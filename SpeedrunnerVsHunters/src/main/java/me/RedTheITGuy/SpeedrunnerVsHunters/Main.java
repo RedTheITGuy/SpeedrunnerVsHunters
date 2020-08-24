@@ -15,8 +15,13 @@ public class Main extends JavaPlugin {
 		boolean loadPrevious = config.getBoolean("persistantSave");
 
 		// Generates the worlds needed (and deletes old versions if necessary)
-		GenerateWorlds.generate(!loadPrevious);
-
+		GenerateWorlds.generate(!loadPrevious);	
+		
+		// Gets the class to create the scoreboard
+		manageScoreboard manageScoreboard = new manageScoreboard();
+		// Runs the method to create the scoreboard
+		manageScoreboard.createBoard();
+		
 		// Registers the listener
 		Bukkit.getServer().getPluginManager().registerEvents(new EventListener(), this);
 	}

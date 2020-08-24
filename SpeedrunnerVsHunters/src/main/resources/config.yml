@@ -1,2 +1,10 @@
-# Wether or not to save games through reboots
+# All strings can include colour codes using & unless otherwise stated
+
+# Whether or not to save games through reboots
 persistantSave: false
+
+# The title for the scoreboard (must be under 128 characters)
+title: "&6domain.name"
+
+# Sets the minimum number of players for a game to automaticaly start (also used for the player number in the scoreboard)
+minPlayers: 5
