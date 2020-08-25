@@ -8,3 +8,10 @@ title: "&6domain.name"
 
 # Sets the minimum number of players for a game to automaticaly start (also used for the player number in the scoreboard)
 minPlayers: 5
+
+# These settings regaurd the game itself
+game:
+  # The time a runner gets before the hunters are moved to the world
+  headStart: 5
+  # The period of time between each location reveal
+  locationRevealTime: 2

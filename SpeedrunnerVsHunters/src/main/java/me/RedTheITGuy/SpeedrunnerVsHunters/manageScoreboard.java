@@ -11,7 +11,7 @@ import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 public class manageScoreboard {
-	public void createBoard() {
+	public Objective createBoard() {
 		// Loads the config
 		FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
 		// Gets info from the config
@@ -41,6 +41,8 @@ public class manageScoreboard {
 		// Runs the method to set the board to it's starting state
 		resetBoard();
 		
+		// Returns the created board
+		return svhGameInfo;
 	}
 	
 	public void resetBoard() {
@@ -68,21 +70,21 @@ public class manageScoreboard {
 		// Creates the team if it doesn't exist
 		if (gamemodeTeam == null) gamemodeTeam = scoreboard.registerNewTeam("gamemode");
 		// Adds the gamemode entry
-		gamemodeTeam.addEntry(ChatColor.BLUE + "Gamemode: ");
+		gamemodeTeam.addEntry(ChatColor.AQUA + "Gamemode: ");
 		// Sets the info in the gamemode entry
 		gamemodeTeam.setSuffix("Speedrunner vs Hunters");
 		// Sets the score for the entry so it displays
-		svhGameInfo.getScore(ChatColor.BLUE + "Gamemode: ").setScore(2);
+		svhGameInfo.getScore(ChatColor.AQUA + "Gamemode: ").setScore(2);
 		
 		// Adds an empty entry for better spacing
-		svhGameInfo.getScore(ChatColor.BLUE.toString()).setScore(1);
+		svhGameInfo.getScore(ChatColor.DARK_BLUE.toString()).setScore(1);
 
 		// Gets the gamemode team 
 		Team playersTeam = scoreboard.getTeam("players");
 		// Creates the team if it doesn't exist
 		if (playersTeam == null) playersTeam = scoreboard.registerNewTeam("players");
 		// Adds the players entry
-		playersTeam.addEntry(ChatColor.BLUE + "Players: ");
+		playersTeam.addEntry(ChatColor.AQUA + "Players: ");
 		// Creates the variable to store the online player count
 		int onlinePlayers = 0;
 		// Runs for all online players
@@ -93,6 +95,6 @@ public class manageScoreboard {
 		// Sets the info in the players entry
 		playersTeam.setSuffix(" " + onlinePlayers + "/" + minPlayers);
 		// Sets the score for the entry
-		svhGameInfo.getScore(ChatColor.BLUE + "Players: ").setScore(0);
+		svhGameInfo.getScore(ChatColor.AQUA + "Players: ").setScore(0);
 	}
 }
