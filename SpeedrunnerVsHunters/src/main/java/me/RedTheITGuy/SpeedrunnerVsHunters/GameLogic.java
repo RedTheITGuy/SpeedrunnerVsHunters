@@ -109,6 +109,8 @@ public class GameLogic {
 		bossBar.setVisible(true);
 		// Sets the bar to full for the start
 		bossBar.setProgress(1.0);
+		// Sets the title of the boss bar
+		bossBar.setTitle(ChatColor.GOLD + "Hunters released in " + headStart + ":00");
 		
 		// Teleports the runner into the world
 		runner.teleport(Bukkit.getWorld("svh-overworld").getSpawnLocation());
