@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.RedTheITGuy.SpeedrunnerVsHunters</groupId>
   <artifactId>SpeedrunnerVsHunters</artifactId>
-  <version>0.6</version>
+  <version>0.7</version>
   <name>SpeedrunnerVsHunters</name>
   <description>The plugin to run the logic for the speedrunner vs hunters Minecraft gamemode.</description>
 
@@ -15,15 +15,15 @@
 
   <repositories>
     <repository>
-      <id>spigotmc-repo</id>
-      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+      <id>papermc</id>
+      <url>https://papermc.io/repo/repository/maven-public/</url>
     </repository>
   </repositories>
 
   <dependencies>
     <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot-api</artifactId>
+      <groupId>com.destroystokyo.paper</groupId>
+      <artifactId>paper-api</artifactId>
       <version>1.16.1-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>

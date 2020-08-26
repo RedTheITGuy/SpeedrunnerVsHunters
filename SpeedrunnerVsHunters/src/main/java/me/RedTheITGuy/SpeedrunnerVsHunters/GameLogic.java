@@ -1,10 +1,8 @@
 package me.RedTheITGuy.SpeedrunnerVsHunters;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
+import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -13,13 +11,14 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 public class GameLogic {
-	public void playGame(Player runner) {
+	public void playGame(final Player runner) {
 		// Loads the config
 		FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
 		// Gets info from the config
@@ -120,11 +119,11 @@ public class GameLogic {
 		bossBar.setTitle(ChatColor.GOLD + "Hunters released in " + headStart + ":00");
 
 		// Runs for every player
-		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
+		for (Player player : Bukkit.getOnlinePlayers()) {
 			// Displays the bar to the player
 			bossBar.addPlayer(player);
 			// Sends a title to the player to let them know the game has started
-			player.sendTitle(ChatColor.GOLD + runner.getDisplayName() + " has started as the runner!", ChatColor.AQUA + "Let the games begin...", 10, 70, 20);
+			player.sendTitle(ChatColor.GOLD + runner.getDisplayName() + " is the runner!", ChatColor.AQUA + "Let the games begin...", 10, 70, 20);
 			// Plays a sound to draw attention to the start of the game
 			player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_AMBIENT, SoundCategory.VOICE, 10F, 1F);
 			
@@ -132,10 +131,10 @@ public class GameLogic {
 			if (!player.equals(runner)) huntersTeam.addEntry(player.getName());
 		}
 		
-		// Creates a new schedular for the next code
-		ScheduledExecutorService ses = Executors.newSingleThreadScheduledExecutor();
-		// Runs every second
-		ses.scheduleAtFixedRate(new Runnable() {
+		// Gets the bukkit scheduler
+		BukkitScheduler scheduler = Bukkit.getScheduler();
+		// Runs every 20 ticks (second)
+		scheduler.runTaskTimer(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), new Runnable() {
 			public void run() {
 				// Gets the objective
 				Objective infoBoard = scoreboard.getObjective("svhGameInfo");
@@ -213,6 +212,36 @@ public class GameLogic {
 			    		minsLeft--;
 			    		// Runs if the minutes left has reached 0
 			    		if (minsLeft < 0) {
+			    			// Runs is the bar is for hunter release
+			    			if (barTitle.contains("Hunters released in")) {
+			    				// Gets the class for spawning the player
+			    				SpawnManager spawner = new SpawnManager();
+			    				// Runs for every player
+			    				for (Player player : Bukkit.getOnlinePlayers()) {
+			    					// Sends a title to the player to let them know the hunters have been released
+			    					player.sendTitle(ChatColor.GOLD + "Hunters released!", ChatColor.AQUA + "Good luck, you'll need it...", 10, 70, 20);
+			    					// Plays a sound to draw attention to the hunters release
+			    					player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_AMBIENT, SoundCategory.VOICE, 10F, 1F);
+			    					
+			    					// Sends the player to the new world if they are not already in it
+			    					if (!player.getWorld().getName().contains("svh-")) spawner.spawnPlayer(player);
+			    				}
+			    				
+			    				// Adds an empty entry for better spacing
+			    				infoBoard.getScore(ChatColor.DARK_AQUA.toString()).setScore(3);
+			    				
+			    				// Gets the kill count team
+			    				Team killCountTeam = scoreboard.getTeam("killCount");
+			    				// Creates the runner name team if it doesn't exist
+			    				if (killCountTeam == null) killCountTeam = scoreboard.registerNewTeam("killCount");
+			    				// Adds the entry to the team
+			    				killCountTeam.addEntry(ChatColor.AQUA + "Kills: ");
+			    				// Adds the info for the entry
+			    				killCountTeam.setSuffix("0");
+			    				// Sets the score for the entry to display it in the objective
+			    				infoBoard.getScore(ChatColor.AQUA + "Kills: ").setScore(2);
+			    			}
+			    			
 			    			// Sets the seconds to 0
 			    			secsLeft = 0;
 			    			// Sets the minutes to the location reveal time
@@ -242,6 +271,6 @@ public class GameLogic {
 			    	bossBar.setProgress(barProgress);
 				}
 			}
-		}, 1, 1, TimeUnit.SECONDS);
+		}, 20, 20);
 	}
 }
