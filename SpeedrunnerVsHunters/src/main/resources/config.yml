@@ -3,6 +3,12 @@
 # Whether or not to save games through reboots
 persistantSave: false
 
+# Sets the size of the world borders (must be a number, can have a decimal)
+worldborder:
+  overworld: 4000
+  nether: 4000
+  end: 500
+
 # The title for the scoreboard (must be under 128 characters)
 title: "&6domain.name"
 

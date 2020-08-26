@@ -4,9 +4,17 @@ import java.nio.file.Files;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
+import org.bukkit.configuration.file.FileConfiguration;
 
 public class GenerateWorlds {
 	public static void generate(boolean override) {
+		// Loads the config
+		FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
+		// Gets info from the config
+		Double overworldBorderSize = config.getDouble("worldborder.overworld");
+		Double netherBorderSize = config.getDouble("worldborder.nether");
+		Double endBorderSize = config.getDouble("worldborder.end");
+		
 		// Stores the names of the worlds in variables
 		String overworldName = "svh-overworld";
 		String netherName = "svh-nether";
@@ -61,7 +69,9 @@ public class GenerateWorlds {
 		// Sets the environment to overworld
 		overworldCreator.environment(World.Environment.NORMAL);
 		// Creates the world
-		overworldCreator.createWorld();
+		World overworld = overworldCreator.createWorld();
+		// Sets the world border for the world
+		overworld.getWorldBorder().setSize(overworldBorderSize);
 
 		// Logs that the nether is being loaded to the console
 		Bukkit.getLogger().info("Loading nether");
@@ -70,7 +80,9 @@ public class GenerateWorlds {
 		// Sets the environment to nether
 		netherCreator.environment(World.Environment.NETHER);
 		// Creates the world
-		netherCreator.createWorld();
+		World nether =netherCreator.createWorld();
+		// Sets the world border for the nether
+		nether.getWorldBorder().setSize(netherBorderSize);
 
 		// Logs that the end is being loaded to the console
 		Bukkit.getLogger().info("Loading end");
@@ -79,7 +91,9 @@ public class GenerateWorlds {
 		// Sets the environment to end
 		endCreator.environment(World.Environment.THE_END);
 		// Creates the world
-		endCreator.createWorld();
+		World end = endCreator.createWorld();
+		// Sets the world border for the end
+		end.getWorldBorder().setSize(endBorderSize);
 	}
 
 	// Creates the method for deleting files
