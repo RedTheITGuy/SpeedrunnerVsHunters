@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.World;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.KeyedBossBar;
@@ -241,6 +242,97 @@ public class GameLogic {
 			    				// Sets the score for the entry to display it in the objective
 			    				infoBoard.getScore(ChatColor.AQUA + "Kills: ").setScore(2);
 			    			}
+			    			// Runs if the timer is for the location reveal
+					    	else if (barTitle.contains("Location revealed in")) {
+					    		// Adds an empty entry for better spacing if there is none
+			    				if (!infoBoard.getScore(ChatColor.LIGHT_PURPLE.toString()).isScoreSet()) infoBoard.getScore(ChatColor.LIGHT_PURPLE.toString()).setScore(13);
+			    				
+			    				// Adds the player location label if it isn't there
+			    				if (!infoBoard.getScore(ChatColor.AQUA + "Player Location:").isScoreSet()) infoBoard.getScore(ChatColor.AQUA + "Player Location:").setScore(12);
+			    				
+			    				// Stores the runners location
+			    				Location runnerLocation = runner.getLocation();
+			    				
+			    				// Runs if the player is not in the overworld
+			    				if (!runnerLocation.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
+			    					// Gets the world team
+				    				Team worldTeam = scoreboard.getTeam("world");
+				    				// Creates the world team if it doesn't exist
+				    				if (worldTeam == null) worldTeam = scoreboard.registerNewTeam("world");
+				    				// Adds the entry to the team
+				    				worldTeam.addEntry("World: ");
+				    				// Runs if the player is in the nether
+				    				if (runnerLocation.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
+					    				// Sets the world to the nether
+					    				worldTeam.setSuffix("Nether");
+				    				}
+				    				// Runs if the player is in the end
+				    				else if (runnerLocation.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
+				    					// Sets the world to the end
+				    					worldTeam.setSuffix("The End");
+				    				}
+				    				// Sets the score for the entry to display it in the objective
+				    				infoBoard.getScore("World: ").setScore(11);
+			    				}
+			    				// Runs if the player is in the overworld
+			    				else {
+			    					// Deletes the world entry is it is there
+			    					if (infoBoard.getScore("World: ").isScoreSet()) scoreboard.resetScores("World: ");
+			    				}
+			    				
+			    				// Runs if the player is not in the end
+			    				if (!runnerLocation.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
+			    					// Gets the x coord team
+				    				Team xCoordTeam = scoreboard.getTeam("xCoord");
+				    				// Creates the x coord team if it doesn't exist
+				    				if (xCoordTeam == null) xCoordTeam = scoreboard.registerNewTeam("xCoord");
+				    				// Adds the entry to the team
+				    				xCoordTeam.addEntry("X: ");
+				    				// Adds the info for the entry
+				    				xCoordTeam.setSuffix(runner.getLocation().getBlockX() + "");
+				    				// Sets the score for the entry to display it in the objective
+				    				infoBoard.getScore("X: ").setScore(10);
+
+			    					// Gets the y coord team
+				    				Team yCoordTeam = scoreboard.getTeam("yCoord");
+				    				// Creates the y coord team if it doesn't exist
+				    				if (yCoordTeam == null) yCoordTeam = scoreboard.registerNewTeam("yCoord");
+				    				// Adds the entry to the team
+				    				yCoordTeam.addEntry("Y: ");
+				    				// Adds the info for the entry
+				    				yCoordTeam.setSuffix(runner.getLocation().getBlockY() + "");
+				    				// Sets the score for the entry to display it in the objective
+				    				infoBoard.getScore("Y: ").setScore(9);
+
+			    					// Gets the z coord team
+				    				Team zCoordTeam = scoreboard.getTeam("zCoord");
+				    				// Creates the z coord team if it doesn't exist
+				    				if (zCoordTeam == null) zCoordTeam = scoreboard.registerNewTeam("zCoord");
+				    				// Adds the entry to the team
+				    				zCoordTeam.addEntry("Z: ");
+				    				// Adds the info for the entry
+				    				zCoordTeam.setSuffix(runner.getLocation().getBlockZ() + "");
+				    				// Sets the score for the entry to display it in the objective
+				    				infoBoard.getScore("Z: ").setScore(8);
+			    				}
+			    				// Runs if the player is in the end
+			    				else {
+			    					// Deletes the x entry is it is there
+			    					if (infoBoard.getScore("X: ").isScoreSet()) scoreboard.resetScores("X: ");
+			    					// Deletes the y entry is it is there
+			    					if (infoBoard.getScore("Y: ").isScoreSet()) scoreboard.resetScores("Y: ");
+			    					// Deletes the z entry is it is there
+			    					if (infoBoard.getScore("Z: ").isScoreSet()) scoreboard.resetScores("Z: ");
+			    				}
+			    				
+			    				// Runs for every player
+			    				for (Player player : Bukkit.getOnlinePlayers()) {
+			    					// Sends an action bar to let the player know the location has been revealed
+			    					player.sendActionBar(ChatColor.GOLD + "The runner's location has been revealed.");
+			    					// Plays a sound to draw attention to the location reveal
+			    					player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.VOICE, 10F, 1F);
+			    				}
+					    	}
 			    			
 			    			// Sets the seconds to 0
 			    			secsLeft = 0;
