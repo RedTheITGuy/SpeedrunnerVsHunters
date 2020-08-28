@@ -6,6 +6,11 @@ import org.bukkit.entity.Player;
 
 public class SpawnManager {
 	public void spawnPlayer(Player player) {
+		// Teleports the player to the location
+		player.teleportAsync(getSpawnLocation());
+	}
+	
+	public Location getSpawnLocation() {
 		// Creates the random for random numbers
 		Random random = new Random();
 		
@@ -16,7 +21,8 @@ public class SpawnManager {
 		teleportLocation.setZ(teleportLocation.getY() + ((random.nextDouble() * 50.0) - 25.0));
 		// Set the y to the highest empty block
 		teleportLocation.setY(teleportLocation.getWorld().getHighestBlockYAt(teleportLocation));
-		// Teleports the player to the location
-		player.teleportAsync(teleportLocation);
+		
+		// Returns the location
+		return teleportLocation;
 	}
 }

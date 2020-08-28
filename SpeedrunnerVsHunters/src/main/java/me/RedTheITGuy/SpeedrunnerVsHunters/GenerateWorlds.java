@@ -79,6 +79,8 @@ public class GenerateWorlds {
 		// Sets the game rules for the new world
 		overworld.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 		overworld.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
+		overworld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
+		overworld.setGameRule(GameRule.DO_INSOMNIA, false);
 
 		// Logs that the nether is being loaded to the console
 		Bukkit.getLogger().info("Loading nether");

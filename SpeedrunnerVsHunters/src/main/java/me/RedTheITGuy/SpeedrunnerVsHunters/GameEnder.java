@@ -28,6 +28,8 @@ public class GameEnder {
 		// Creates a string to store the subtitles
 		String subtitleRunner = "";
 		String subtitleHunter = "";
+		// Creates a variable to store the game over sound
+		Sound gameOverSound;
 
 		// Gets the scoreboard manager
 		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
@@ -79,6 +81,8 @@ public class GameEnder {
 			subtitleRunner = "Congrats, you're just to good!";
 			// Sets the subtitle to be sent to the hunters
 			subtitleHunter = "Better luck next time.";
+			// Sets the sound to be played
+			gameOverSound = Sound.UI_TOAST_CHALLENGE_COMPLETE;
 		}
 		// Runs if the hunters won
 		else {
@@ -91,6 +95,8 @@ public class GameEnder {
 			subtitleRunner = "You lost? You hate to see it.";
 			// Sets the subtitle to be sent to the hunters
 			subtitleHunter = "What a game, you're masters at this!";
+			// Sets the sound to be played
+			gameOverSound = Sound.UI_TOAST_CHALLENGE_COMPLETE;
 		}
 		
 		// Sets the score for the entry to display it in the objective
@@ -116,6 +122,10 @@ public class GameEnder {
 		for (Player player : Bukkit.getOnlinePlayers()) {
 			// Sets the player to spectator mode
 			player.setGameMode(GameMode.SPECTATOR);
+			// Clears the player's inventory
+			player.getInventory().clear();
+			// Resets players xp
+			player.setExp(0);
 			
 			// Runs if the player is the runner
 			if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) {
@@ -128,7 +138,7 @@ public class GameEnder {
 				player.sendTitle(ChatColor.GOLD + title, ChatColor.AQUA + subtitleHunter, 10, 70, 20);
 			}
 			// Plays a sound to draw attention to the start of the game
-			player.playSound(player.getLocation(), Sound.UI_TOAST_CHALLENGE_COMPLETE, SoundCategory.VOICE, 10F, 1F);
+			player.playSound(player.getLocation(), gameOverSound, SoundCategory.VOICE, 10F, 1F);
 		}
 	}
 }

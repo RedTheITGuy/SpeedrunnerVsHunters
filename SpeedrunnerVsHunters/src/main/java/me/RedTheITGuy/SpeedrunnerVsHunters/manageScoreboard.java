@@ -74,6 +74,16 @@ public class manageScoreboard {
 			return;
 		}
 		
+		// Gets the speedrunner team
+		Team speedrunnerTeam = scoreboard.getTeam("speedrunner");
+		// Removes the speedrunner team if it exists
+		if (speedrunnerTeam != null) speedrunnerTeam.unregister();
+		
+		// Gets the hunters team
+		Team huntersTeam = scoreboard.getTeam("hunters");
+		// Removes the hunters team if it exists
+		if (huntersTeam != null) huntersTeam.unregister();
+		
 		// Runs for all the entries tracked by the scoreboard
 		for (String entry : scoreboard.getEntries()) {
 			// Moves to the next entry if this entry is not tracked in the objective

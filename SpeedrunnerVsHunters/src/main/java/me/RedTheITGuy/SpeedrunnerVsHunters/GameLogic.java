@@ -2,6 +2,7 @@ package me.RedTheITGuy.SpeedrunnerVsHunters;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameRule;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
@@ -230,6 +231,9 @@ public class GameLogic {
 			    					if (!player.getWorld().getName().contains("svh-")) spawner.spawnPlayer(player);
 			    				}
 			    				
+			    				// Enables the daylight cycle
+			    				Bukkit.getWorld("svh-overworld").setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
+			    				
 			    				// Adds an empty entry for better spacing
 			    				infoBoard.getScore(ChatColor.DARK_AQUA.toString()).setScore(3);
 			    				
@@ -337,6 +341,9 @@ public class GameLogic {
 					    	}
 			    			// Runs if the timer is for reseting the server
 					    	else if (barTitle.contains("Server reseting in")) {
+					    		// Stops all tasks scheduled by this plugin
+					    		scheduler.cancelTasks(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"));
+					    		
 					    		// Runs for every player
 			    				for (Player player : Bukkit.getOnlinePlayers()) {
 			    					// Kicks the player from the server
@@ -360,8 +367,6 @@ public class GameLogic {
 					    		// Deletes old worlds and creates new ones
 					    		worldGenerator.generate(true);
 					    		
-					    		// Stops all tasks scheduled by this plugin
-					    		scheduler.cancelTasks(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"));
 					    		// Exits the method
 					    		return;
 					    	}

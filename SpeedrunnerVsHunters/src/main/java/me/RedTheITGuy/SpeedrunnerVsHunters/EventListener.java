@@ -6,19 +6,98 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
-import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
 public class EventListener implements Listener {
+	// Runs when a player dies
+	@EventHandler
+	public void onPlayerDeath(PlayerDeathEvent event) {
+		// Stores the dead player
+		Player player = event.getEntity();
+		
+		// Gets the scoreboard manager
+		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		// Gets the scoreboard
+		Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+		// Loads the objective
+		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
+		
+		// Exit method if the board doesn't exist or a game isn't running
+		if (infoBoard == null || !infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) return;
+		
+		// Runs if the dead player was the runner
+		if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) {
+			// Sets the player's gamemode to spectator
+			player.setGameMode(GameMode.SPECTATOR);
+			
+			// Gets the game ender class
+			GameEnder gameEnder = new GameEnder();
+			// Runs the method to end the game
+			gameEnder.endGame(false);
+			
+			// Cancels the event
+			event.setCancelled(true);
+			// Exits the method
+			return;
+		}
+		
+		// Runs if the player was killed by the runner
+		if (event.getEntity().getKiller().equals(Bukkit.getPlayer(scoreboard.getTeam("runnerName").getSuffix())))  {
+			// Creates a variable to store the kill count of the runner
+			int runnerKillCount = 1;
+			
+			// Gets the kill count team
+			Team killCountTeam = scoreboard.getTeam("killCount");
+			// Creates the runner name team if it doesn't exist
+			if (killCountTeam == null) killCountTeam = scoreboard.registerNewTeam("killCount");
+			// Sets the kill count to the right value if it was set before
+			if (killCountTeam.getSuffix() != null) runnerKillCount = Integer.parseInt(killCountTeam.getSuffix()) + 1;
+			// Adds the entry to the team
+			killCountTeam.addEntry(ChatColor.AQUA + "Kills: ");
+			// Adds the info for the entry
+			killCountTeam.setSuffix(runnerKillCount + "");
+			// Sets the score for the entry to display it in the objective if it was not already set
+			if (!infoBoard.getScore(ChatColor.AQUA + "Kills: ").isScoreSet()) infoBoard.getScore(ChatColor.AQUA + "Kills: ").setScore(2);
+		}
+	}
+	
+	// Runs when a player respawns
+	@EventHandler
+	public void onPlayerSpawn(PlayerRespawnEvent event) {
+		// Stores the respawning player
+		Player player = event.getPlayer();
+		
+		// Gets the scoreboard manager
+		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		// Gets the scoreboard
+		Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+		// Loads the objective
+		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
+		
+		// Exits the method if the hunter release hasn't happened
+		if (!infoBoard.getScore(ChatColor.AQUA + "Kills: ").isScoreSet()) return;
+		
+		// Runs if the player is not going to spawn in the game world
+		if (!event.getRespawnLocation().getWorld().getName().contains("svh-")) {
+			// Gets the class for spawning the player
+			SpawnManager spawner = new SpawnManager();
+			// Sets the spawn location
+			event.setRespawnLocation(spawner.getSpawnLocation());
+		}
+	}
+	
 	// Runs when a player enters a portal
 	@EventHandler
 	public void onPortalTeleport(PlayerPortalEvent event) {
