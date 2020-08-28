@@ -118,6 +118,8 @@ public class GameLogic {
 		bossBar.setProgress(1.0);
 		// Sets the title of the boss bar
 		bossBar.setTitle(ChatColor.GOLD + "Hunters released in " + headStart + ":00");
+		// Ensures the boss bar is visible
+		bossBar.setVisible(true);
 
 		// Runs for every player
 		for (Player player : Bukkit.getOnlinePlayers()) {
@@ -192,7 +194,7 @@ public class GameLogic {
 				// Gets the boss bar
 				KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
 				// Runs if there is a boss bar
-				if (bossBar != null) {
+				if (bossBar != null && bossBar.isVisible()) {
 					// Gets the boss bar title
 					String barTitle = bossBar.getTitle();
 					// Strips the colour so it doesn't mess up the code
@@ -222,7 +224,7 @@ public class GameLogic {
 			    					// Sends a title to the player to let them know the hunters have been released
 			    					player.sendTitle(ChatColor.GOLD + "Hunters released!", ChatColor.AQUA + "Good luck, you'll need it...", 10, 70, 20);
 			    					// Plays a sound to draw attention to the hunters release
-			    					player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_AMBIENT, SoundCategory.VOICE, 10F, 1F);
+			    					player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.VOICE, 10F, 1F);
 			    					
 			    					// Sends the player to the new world if they are not already in it
 			    					if (!player.getWorld().getName().contains("svh-")) spawner.spawnPlayer(player);
@@ -248,7 +250,7 @@ public class GameLogic {
 			    				if (!infoBoard.getScore(ChatColor.LIGHT_PURPLE.toString()).isScoreSet()) infoBoard.getScore(ChatColor.LIGHT_PURPLE.toString()).setScore(13);
 			    				
 			    				// Adds the player location label if it isn't there
-			    				if (!infoBoard.getScore(ChatColor.AQUA + "Player Location:").isScoreSet()) infoBoard.getScore(ChatColor.AQUA + "Player Location:").setScore(12);
+			    				if (!infoBoard.getScore(ChatColor.DARK_AQUA + "Player Location:").isScoreSet()) infoBoard.getScore(ChatColor.DARK_AQUA + "Player Location:").setScore(12);
 			    				
 			    				// Stores the runners location
 			    				Location runnerLocation = runner.getLocation();
@@ -260,7 +262,7 @@ public class GameLogic {
 				    				// Creates the world team if it doesn't exist
 				    				if (worldTeam == null) worldTeam = scoreboard.registerNewTeam("world");
 				    				// Adds the entry to the team
-				    				worldTeam.addEntry("World: ");
+				    				worldTeam.addEntry(ChatColor.AQUA + "World: ");
 				    				// Runs if the player is in the nether
 				    				if (runnerLocation.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
 					    				// Sets the world to the nether
@@ -272,12 +274,12 @@ public class GameLogic {
 				    					worldTeam.setSuffix("The End");
 				    				}
 				    				// Sets the score for the entry to display it in the objective
-				    				infoBoard.getScore("World: ").setScore(11);
+				    				infoBoard.getScore(ChatColor.AQUA + "World: ").setScore(11);
 			    				}
 			    				// Runs if the player is in the overworld
 			    				else {
 			    					// Deletes the world entry is it is there
-			    					if (infoBoard.getScore("World: ").isScoreSet()) scoreboard.resetScores("World: ");
+			    					if (infoBoard.getScore(ChatColor.AQUA + "World: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "World: ");
 			    				}
 			    				
 			    				// Runs if the player is not in the end
@@ -287,42 +289,42 @@ public class GameLogic {
 				    				// Creates the x coord team if it doesn't exist
 				    				if (xCoordTeam == null) xCoordTeam = scoreboard.registerNewTeam("xCoord");
 				    				// Adds the entry to the team
-				    				xCoordTeam.addEntry("X: ");
+				    				xCoordTeam.addEntry(ChatColor.AQUA + "X: ");
 				    				// Adds the info for the entry
-				    				xCoordTeam.setSuffix(runner.getLocation().getBlockX() + "");
+				    				xCoordTeam.setSuffix(runnerLocation.getBlockX() + "");
 				    				// Sets the score for the entry to display it in the objective
-				    				infoBoard.getScore("X: ").setScore(10);
+				    				infoBoard.getScore(ChatColor.AQUA + "X: ").setScore(10);
 
 			    					// Gets the y coord team
 				    				Team yCoordTeam = scoreboard.getTeam("yCoord");
 				    				// Creates the y coord team if it doesn't exist
 				    				if (yCoordTeam == null) yCoordTeam = scoreboard.registerNewTeam("yCoord");
 				    				// Adds the entry to the team
-				    				yCoordTeam.addEntry("Y: ");
+				    				yCoordTeam.addEntry(ChatColor.AQUA + "Y: ");
 				    				// Adds the info for the entry
-				    				yCoordTeam.setSuffix(runner.getLocation().getBlockY() + "");
+				    				yCoordTeam.setSuffix(runnerLocation.getBlockY() + "");
 				    				// Sets the score for the entry to display it in the objective
-				    				infoBoard.getScore("Y: ").setScore(9);
+				    				infoBoard.getScore(ChatColor.AQUA + "Y: ").setScore(9);
 
 			    					// Gets the z coord team
 				    				Team zCoordTeam = scoreboard.getTeam("zCoord");
 				    				// Creates the z coord team if it doesn't exist
 				    				if (zCoordTeam == null) zCoordTeam = scoreboard.registerNewTeam("zCoord");
 				    				// Adds the entry to the team
-				    				zCoordTeam.addEntry("Z: ");
+				    				zCoordTeam.addEntry(ChatColor.AQUA + "Z: ");
 				    				// Adds the info for the entry
-				    				zCoordTeam.setSuffix(runner.getLocation().getBlockZ() + "");
+				    				zCoordTeam.setSuffix(runnerLocation.getBlockZ() + "");
 				    				// Sets the score for the entry to display it in the objective
-				    				infoBoard.getScore("Z: ").setScore(8);
+				    				infoBoard.getScore(ChatColor.AQUA + "Z: ").setScore(8);
 			    				}
 			    				// Runs if the player is in the end
 			    				else {
 			    					// Deletes the x entry is it is there
-			    					if (infoBoard.getScore("X: ").isScoreSet()) scoreboard.resetScores("X: ");
+			    					if (infoBoard.getScore(ChatColor.AQUA + "X: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "X: ");
 			    					// Deletes the y entry is it is there
-			    					if (infoBoard.getScore("Y: ").isScoreSet()) scoreboard.resetScores("Y: ");
+			    					if (infoBoard.getScore(ChatColor.AQUA + "Y: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Y: ");
 			    					// Deletes the z entry is it is there
-			    					if (infoBoard.getScore("Z: ").isScoreSet()) scoreboard.resetScores("Z: ");
+			    					if (infoBoard.getScore(ChatColor.AQUA + "Z: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Z: ");
 			    				}
 			    				
 			    				// Runs for every player
