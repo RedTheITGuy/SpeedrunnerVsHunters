@@ -13,6 +13,7 @@ import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
@@ -25,6 +26,7 @@ public class GameLogic {
 		// Gets info from the config
 		final int headStart = config.getInt("game.headStart");
 		final int locationRevealTime = config.getInt("game.locationRevealTime");
+		final int resetTime = config.getInt("resetTime");
 		
 		// Teleports the runner into the world
 		runner.teleport(Bukkit.getWorld("svh-overworld").getSpawnLocation());
@@ -118,8 +120,6 @@ public class GameLogic {
 		bossBar.setProgress(1.0);
 		// Sets the title of the boss bar
 		bossBar.setTitle(ChatColor.GOLD + "Hunters released in " + headStart + ":00");
-		// Ensures the boss bar is visible
-		bossBar.setVisible(true);
 
 		// Runs for every player
 		for (Player player : Bukkit.getOnlinePlayers()) {
@@ -135,7 +135,7 @@ public class GameLogic {
 		}
 		
 		// Gets the bukkit scheduler
-		BukkitScheduler scheduler = Bukkit.getScheduler();
+		final BukkitScheduler scheduler = Bukkit.getScheduler();
 		// Runs every 20 ticks (second)
 		scheduler.runTaskTimer(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), new Runnable() {
 			public void run() {
@@ -208,7 +208,7 @@ public class GameLogic {
 			    	// Subtracts 1 from the seconds
 			    	secsLeft--;
 			    	// Runs if the seconds left has reached 0
-			    	if (secsLeft < 1) {
+			    	if (secsLeft < 0) {
 			    		// Resets the seconds to 59
 			    		secsLeft = 59;
 			    		// Subtracts 1 from the minutes
@@ -335,6 +335,36 @@ public class GameLogic {
 			    					player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.VOICE, 10F, 1F);
 			    				}
 					    	}
+			    			// Runs if the timer is for reseting the server
+					    	else if (barTitle.contains("Server reseting in")) {
+					    		// Runs for every player
+			    				for (Player player : Bukkit.getOnlinePlayers()) {
+			    					// Kicks the player from the server
+			    					player.kickPlayer("The game has ended, setting up the next game.");
+			    				}
+					    		// Enables the whitelist
+					    		Bukkit.setWhitelist(true);
+					    		
+					    		// Makes the boss bar invisible
+					    		bossBar.setVisible(false);
+					    		// Removes all players from the boss bar
+					    		bossBar.removeAll();
+					    		
+					    		// Gets the scoreboard manager
+					    		manageScoreboard scoreboardManager = new manageScoreboard();
+					    		// Resets the scoreboard
+					    		scoreboardManager.resetBoard();
+					    		
+					    		// Gets the world generator
+					    		GenerateWorlds worldGenerator = new GenerateWorlds();
+					    		// Deletes old worlds and creates new ones
+					    		worldGenerator.generate(true);
+					    		
+					    		// Stops all tasks scheduled by this plugin
+					    		scheduler.cancelTasks(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"));
+					    		// Exits the method
+					    		return;
+					    	}
 			    			
 			    			// Sets the seconds to 0
 			    			secsLeft = 0;
@@ -360,6 +390,11 @@ public class GameLogic {
 			    	else if (barTitle.contains("Location revealed in")) {
 			    		// Calculates the bar progress
 			    		barProgress = (((double) minsLeft * 60) + secsLeft) / (locationRevealTime * 60);
+			    	}
+			    	// Runs if the timer is for reseting the server
+			    	else if (barTitle.contains("Server reseting in")) {
+			    		// Calculates the bar progress
+			    		barProgress = (((double) minsLeft * 60) + secsLeft) / (resetTime * 60);
 			    	}
 			    	// Sets the bars progress
 			    	bossBar.setProgress(barProgress);

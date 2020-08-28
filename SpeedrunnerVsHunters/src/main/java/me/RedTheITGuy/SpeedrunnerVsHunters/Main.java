@@ -14,8 +14,10 @@ public class Main extends JavaPlugin {
 		// Gets info from the config
 		boolean loadPrevious = config.getBoolean("persistantSave");
 
-		// Generates the worlds needed (and deletes old versions if necessary)
-		GenerateWorlds.generate(!loadPrevious);	
+		// Gets the world generator
+		GenerateWorlds worldGenerator = new GenerateWorlds();
+		// Deletes old worlds and creates new ones
+		worldGenerator.generate(!loadPrevious);
 		
 		// Gets the class to create the scoreboard
 		manageScoreboard manageScoreboard = new manageScoreboard();

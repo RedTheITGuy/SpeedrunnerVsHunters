@@ -48,6 +48,8 @@ public class manageScoreboard {
 	}
 	
 	public void resetBoard() {
+		// Reloads the config
+		Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").reloadConfig();
 		// Loads the config
 		FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
 		// Gets info from the config
@@ -70,6 +72,14 @@ public class manageScoreboard {
 			createBoard();
 			// Exits the method
 			return;
+		}
+		
+		// Runs for all the entries tracked by the scoreboard
+		for (String entry : scoreboard.getEntries()) {
+			// Moves to the next entry if this entry is not tracked in the objective
+			if (!svhGameInfo.getScore(entry).isScoreSet()) continue;
+			// Removes the entry from the objective
+			scoreboard.resetScores(entry);
 		}
 		
 		// Gets the gamemode team 

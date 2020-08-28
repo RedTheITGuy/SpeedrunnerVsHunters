@@ -157,7 +157,10 @@ public class EventListener implements Listener {
 				
 				// Runs if the player is the runner
 				if (isRunner) {
-					// Win event here
+					// Gets the game ender class
+					GameEnder gameEnder = new GameEnder();
+					// Runs the method to end the game
+					gameEnder.endGame(true);
 				}
 				
 				// Cancels the event

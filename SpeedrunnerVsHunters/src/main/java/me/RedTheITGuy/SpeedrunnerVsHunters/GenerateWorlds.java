@@ -2,12 +2,16 @@ package me.RedTheITGuy.SpeedrunnerVsHunters;
 import java.io.File;
 import java.nio.file.Files;
 import org.bukkit.Bukkit;
+import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
 
 public class GenerateWorlds {
-	public static void generate(boolean override) {
+	public void generate(boolean override) {
+		// Enables the whitelist
+		Bukkit.setWhitelist(true);
+		
 		// Loads the config
 		FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
 		// Gets info from the config
@@ -72,6 +76,9 @@ public class GenerateWorlds {
 		World overworld = overworldCreator.createWorld();
 		// Sets the world border for the world
 		overworld.getWorldBorder().setSize(overworldBorderSize);
+		// Sets the game rules for the new world
+		overworld.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+		overworld.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 
 		// Logs that the nether is being loaded to the console
 		Bukkit.getLogger().info("Loading nether");
@@ -80,9 +87,11 @@ public class GenerateWorlds {
 		// Sets the environment to nether
 		netherCreator.environment(World.Environment.NETHER);
 		// Creates the world
-		World nether =netherCreator.createWorld();
+		World nether = netherCreator.createWorld();
 		// Sets the world border for the nether
 		nether.getWorldBorder().setSize(netherBorderSize);
+		// Sets the game rules for the new world
+		nether.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
 
 		// Logs that the end is being loaded to the console
 		Bukkit.getLogger().info("Loading end");
@@ -94,6 +103,11 @@ public class GenerateWorlds {
 		World end = endCreator.createWorld();
 		// Sets the world border for the end
 		end.getWorldBorder().setSize(endBorderSize);
+		// Sets the game rules for the new world
+		end.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+		
+		// Disables the whitelist
+		Bukkit.setWhitelist(false);
 	}
 
 	// Creates the method for deleting files
