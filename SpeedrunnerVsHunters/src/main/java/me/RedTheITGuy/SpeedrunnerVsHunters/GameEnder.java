@@ -141,4 +141,77 @@ public class GameEnder {
 			player.playSound(player.getLocation(), gameOverSound, SoundCategory.VOICE, 10F, 1F);
 		}
 	}
+	
+	public void forfeitGame() {
+		// Gets the scoreboard manager
+		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		// Gets the scoreboard
+		final Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+		// Loads the objective
+		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
+		
+		// Removes the Player location label if it exists
+		if (infoBoard.getScore(ChatColor.DARK_AQUA + "Player Location:").isScoreSet()) scoreboard.resetScores(ChatColor.DARK_AQUA + "Player Location:");
+		// Deletes the world entry is it is there
+		if (infoBoard.getScore(ChatColor.AQUA + "World: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "World: ");
+		// Deletes the x if it exists
+		if (infoBoard.getScore(ChatColor.AQUA + "X: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "X: ");
+		// Deletes the y if it exists
+		if (infoBoard.getScore(ChatColor.AQUA + "Y: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Y: ");
+		// Deletes the z if it exists
+		if (infoBoard.getScore(ChatColor.AQUA + "Z: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Z: ");
+		// Deletes the portal location label if it exists
+		if (infoBoard.getScore(ChatColor.DARK_AQUA + "Portal Location:").isScoreSet()) scoreboard.resetScores(ChatColor.DARK_AQUA + "Portal Location:");
+		// Deletes the portal x if it exists
+		if (infoBoard.getScore(ChatColor.AQUA + "Portal X: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Portal X: ");
+		// Deletes the portal y if it exists
+		if (infoBoard.getScore(ChatColor.AQUA + "Portal Y: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Portal Y: ");
+		// Deletes the portal z if it exists
+		if (infoBoard.getScore(ChatColor.AQUA + "Portal Z: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Portal Z: ");
+		
+		// Adds an empty entry for better spacing if there is none
+		if (!infoBoard.getScore(ChatColor.LIGHT_PURPLE.toString()).isScoreSet()) infoBoard.getScore(ChatColor.LIGHT_PURPLE.toString()).setScore(13);
+		
+		// Gets the portal x coord team
+		Team winnerTeam = scoreboard.getTeam("winner");
+		// Creates the x coord team if it doesn't exist
+		if (winnerTeam == null) winnerTeam = scoreboard.registerNewTeam("winner");
+		// Adds the entry to the team
+		winnerTeam.addEntry(ChatColor.AQUA + "Winner: ");
+		// Adds the info for the entry
+		winnerTeam.setSuffix("Hunters");
+		// Sets the score for the entry to display it in the objective
+		infoBoard.getScore(ChatColor.AQUA + "Winner: ").setScore(12);
+		
+		// Creates the key for the boss bar
+		final NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");
+		// Gets the boss bar
+		KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
+		// Runs if the bar doesn't exist
+		if (bossBar == null) {
+			// Creates the bar
+			bossBar = Bukkit.getServer().createBossBar(barKey, "", BarColor.BLUE, BarStyle.SOLID);
+		}
+		// Sets the bar to visible
+		bossBar.setVisible(true);
+		// Sets the bar to full for the start
+		bossBar.setProgress(1.0);
+		// Sets the title of the boss bar
+		bossBar.setTitle(ChatColor.GOLD + "Server reseting in 0:15");
+		
+		// Runs for every player
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			// Sets the player to spectator mode
+			player.setGameMode(GameMode.SPECTATOR);
+			// Clears the player's inventory
+			player.getInventory().clear();
+			// Resets players xp
+			player.setExp(0);
+			
+			// Sends a title to the player to let them know the game has ended
+			player.sendTitle(ChatColor.GOLD + "The Hunters Win!", ChatColor.AQUA + "The speedrunner quit.", 10, 70, 20);
+			// Plays a sound to draw attention to the start of the game
+			player.playSound(player.getLocation(), Sound.ENTITY_GHAST_HURT, SoundCategory.VOICE, 10F, 1F);
+		}
+	}
 }

@@ -21,6 +21,8 @@ game:
   headStart: 5
   # The period of time between each location reveal
   locationRevealTime: 2
+  # The time after the runner leaves the server before the game ends
+  runnerLeaveTime: 2
 
 # Sets the time until the server resets after a game is over
 resetTime: 2

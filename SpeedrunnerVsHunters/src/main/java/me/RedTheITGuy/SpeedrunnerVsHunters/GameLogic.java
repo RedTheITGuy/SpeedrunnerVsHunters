@@ -28,6 +28,7 @@ public class GameLogic {
 		final int headStart = config.getInt("game.headStart");
 		final int locationRevealTime = config.getInt("game.locationRevealTime");
 		final int resetTime = config.getInt("resetTime");
+		final int runnerLeaveTime = config.getInt("game.runnerLeaveTime");
 
 		// Clears the runner's inventory
 		runner.getInventory().clear();
@@ -155,10 +156,13 @@ public class GameLogic {
 			public void run() {
 				// Gets the objective
 				Objective infoBoard = scoreboard.getObjective("svhGameInfo");
+				// Gets the boss bar
+				KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
 				// Runs if the game is still running
-				if (!infoBoard.getScore(ChatColor.AQUA + "Winner: ").isScoreSet()) {
+				if (!infoBoard.getScore(ChatColor.AQUA + "Winner: ").isScoreSet() && (bossBar == null || !(bossBar.getTitle().contains("Game ending in") && bossBar.isVisible()))) {
 					// Gets the current run time with minutes and seconds split
 					String[] runTime = scoreboard.getTeam("runTime").getSuffix().split(":");
+					// Creates variables to store the times
 					int hoursSurvived = 0;
 					int minsSurvived = 0;
 					int secsSurvived = 0;
@@ -205,8 +209,6 @@ public class GameLogic {
 			    	scoreboard.getTeam("runTime").setSuffix(runTimeString);
 				}
 				
-				// Gets the boss bar
-				KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
 				// Runs if there is a boss bar
 				if (bossBar != null && bossBar.isVisible()) {
 					// Gets the boss bar title
@@ -365,6 +367,15 @@ public class GameLogic {
 			    					player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.VOICE, 10F, 1F);
 			    				}
 					    	}
+					    	// Runs if the timer is for the reset after runner leaves
+					    	else if (barTitle.contains("Game ending in")) {
+					    		// Gets the game ender class
+								GameEnder gameEnder = new GameEnder();
+								// Runs the method to end the game
+								gameEnder.forfeitGame();
+								// Exits the method
+								return;
+					    	}
 			    			// Runs if the timer is for reseting the server
 					    	else if (barTitle.contains("Server reseting in")) {
 					    		// Stops all tasks scheduled by this plugin
@@ -421,6 +432,11 @@ public class GameLogic {
 			    	else if (barTitle.contains("Location revealed in")) {
 			    		// Calculates the bar progress
 			    		barProgress = (((double) minsLeft * 60) + secsLeft) / (locationRevealTime * 60);
+			    	}
+			    	// Runs if the timer is for the reset after runner leaves
+			    	else if (barTitle.contains("Game ending in")) {
+			    		// Calculates the bar progress
+			    		barProgress = (((double) minsLeft * 60) + secsLeft) / (runnerLeaveTime * 60);
 			    	}
 			    	// Runs if the timer is for reseting the server
 			    	else if (barTitle.contains("Server reseting in")) {

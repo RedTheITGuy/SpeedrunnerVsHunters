@@ -7,13 +7,17 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.World.Environment;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -79,6 +83,73 @@ public class EventListener implements Listener {
 				// Adds the player to the hunters team if it exists
 				if (huntersTeam != null) huntersTeam.addEntry(player.getName());
 			}
+			// Runs if the player is the runner and there is a boss bar
+			else if (bossBar != null){
+				// Loads the config
+				FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
+				// Gets info from the config
+				final int headStart = config.getInt("game.headStart");
+				final int locationRevealTime = config.getInt("game.locationRevealTime");
+				
+				// Runs if the player is in the end
+				if (player.getWorld().getEnvironment().equals(Environment.THE_END)) {
+					// Hides the boss bar
+					bossBar.setVisible(false);
+				}
+				else {
+					// Gets the current run time with minutes and seconds split
+					String[] runTime = scoreboard.getTeam("runTime").getSuffix().split(":");
+					// Creates variables to store the times
+					int mins = 0;
+					int secs = 0;
+					if (runTime.length <= 2) {
+						// Converts the minutes and seconds to integers
+				    	mins = Integer.parseInt(runTime[0]);
+				    	secs = Integer.parseInt(runTime[1]);
+					}
+					else {
+						// Converts the minutes and seconds to integers
+				    	mins = Integer.parseInt(runTime[1]) + (Integer.parseInt(runTime[0]) * 60);
+				    	secs = Integer.parseInt(runTime[2]);
+					}
+					
+					// Adds 1 to the minutes if the seconds are over 0
+					if (secs > 0) mins++;
+					// Removes the head start time from the minutes
+					mins -= headStart;
+					
+					// Runs if minutes are less that 0 AKA hunters have not been released
+					if (mins <= 0) {
+						// Makes the minutes positive
+						mins = mins * -1;
+						// Inverts the seconds if needed
+						if (secs > 0) secs = 60 - secs;
+						
+						// Sets the title of the boss bar
+						bossBar.setTitle(ChatColor.GOLD + "Hunters released in " + mins + ":" + secs);
+			    		// Calculates the bar progress
+			    		double barProgress = (((double) mins * 60) + secs) / (headStart * 60);
+				    	// Sets the bars progress
+				    	bossBar.setProgress(barProgress);
+					}
+					// Runs if the bar is for a location reveal
+					else {
+						// Gets the time from the last location reveal
+						mins = mins % locationRevealTime;
+						// Gets the time to the next location reveal
+						if (mins != 0) mins = locationRevealTime - mins;
+						// Inverts the seconds if needed
+						if (secs > 0) secs = 60 - secs;
+						
+						// Sets the title of the boss bar
+						bossBar.setTitle(ChatColor.GOLD + "Location revealed in " + mins + ":" + secs);
+			    		// Calculates the bar progress
+			    		double barProgress = (((double) mins * 60) + secs) / (locationRevealTime * 60);
+				    	// Sets the bars progress
+				    	bossBar.setProgress(barProgress);
+					}
+				}
+			}
 		}
 		
 		// Runs if the game is over
@@ -90,6 +161,51 @@ public class EventListener implements Listener {
 			// Sets the player to survival mode
 			player.setGameMode(GameMode.SURVIVAL);
 		}
+	}
+	
+	// Runs when a player leaves the server
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent event) {
+		// Loads the config
+		FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
+		// Gets info from the config
+		int resetTime = config.getInt("game.runnerLeaveTime");
+		
+		// Stores the joining player
+		Player player = event.getPlayer();
+		
+		// Gets the scoreboard manager
+		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		// Gets the scoreboard
+		Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+		// Loads the objective
+		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
+		
+		// Returns if a game isn't running
+		if (infoBoard == null || !infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) return;
+		
+		// Returns if the game is over
+		if (infoBoard.getScore(ChatColor.AQUA + "Winner: ").isScoreSet()) return;
+		
+		// Returns if the player is not the runner
+		if (!scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) return;
+		
+		// Creates the key for the boss bar
+		NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");
+		// Gets the boss bar
+		KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
+		// Runs if the bar doesn't exist
+		if (bossBar == null) {
+			// Creates the bar
+			bossBar = Bukkit.getServer().createBossBar(barKey, "", BarColor.BLUE, BarStyle.SOLID);
+		}
+		
+		// Sets the bar to visible
+		bossBar.setVisible(true);
+		// Sets the bar to full for the start
+		bossBar.setProgress(1.0);
+		// Sets the title of the boss bar
+		bossBar.setTitle(ChatColor.GOLD + "Game ending in " + resetTime + ":00");
 	}
 	
 	// Runs when a player dies
@@ -147,9 +263,6 @@ public class EventListener implements Listener {
 	// Runs when a player respawns
 	@EventHandler
 	public void onPlayerSpawn(PlayerRespawnEvent event) {
-		// Stores the respawning player
-		Player player = event.getPlayer();
-		
 		// Gets the scoreboard manager
 		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 		// Gets the scoreboard
