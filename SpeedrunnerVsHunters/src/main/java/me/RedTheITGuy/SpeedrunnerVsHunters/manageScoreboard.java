@@ -120,7 +120,7 @@ public class manageScoreboard {
 			if (player.getGameMode().equals(GameMode.SURVIVAL)) onlinePlayers++;
 		}
 		// Sets the info in the players entry
-		playersTeam.setSuffix(" " + onlinePlayers + "/" + minPlayers);
+		playersTeam.setSuffix(onlinePlayers + "/" + minPlayers);
 		// Sets the score for the entry
 		svhGameInfo.getScore(ChatColor.AQUA + "Players: ").setScore(0);
 	}

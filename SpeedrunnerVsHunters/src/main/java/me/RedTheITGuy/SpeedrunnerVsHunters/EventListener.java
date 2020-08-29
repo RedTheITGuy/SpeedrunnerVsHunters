@@ -15,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -42,6 +43,27 @@ public class EventListener implements Listener {
 		
 		// Returns if the info board doensn't exist
 		if (infoBoard == null) return;
+		
+		// Runs if player needs to be added to the player count on the scoreboard
+		if (infoBoard !=null && infoBoard.getScore(ChatColor.AQUA + "Players: ").isScoreSet()) {
+			// Gets the gamemode team 
+			Team playersTeam = scoreboard.getTeam("players");
+			// Runs if the team does not exist
+			if (playersTeam == null) {
+				// Creates the players team
+				playersTeam = scoreboard.registerNewTeam("players");
+				// Adds the players entry
+				playersTeam.addEntry(ChatColor.AQUA + "Players: ");
+			}
+			// Gets the numbers from the players team suffix
+			String[] playersTeamSuffix = playersTeam.getSuffix().split("/");
+			// Gets the current player count
+			int playerCount = Integer.parseInt(playersTeamSuffix[0]);
+			// Adds the player to the count
+			playerCount++;
+			// Sets the player count to the correct number
+			playersTeam.setSuffix(playerCount + "/" + playersTeamSuffix[1]);
+		}
 		
 		// Runs if the player is joining a non game world
 		if (!player.getLocation().getWorld().getName().contains("svh-")) {
@@ -180,6 +202,28 @@ public class EventListener implements Listener {
 		Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
 		// Loads the objective
 		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
+		
+		// Runs if player needs to be removed from the scoreboard
+		if (infoBoard !=null && infoBoard.getScore(ChatColor.AQUA + "Players: ").isScoreSet() && player.getGameMode().equals(GameMode.SURVIVAL)) {
+			// Gets the gamemode team 
+			Team playersTeam = scoreboard.getTeam("players");
+			// Runs if the team does not exist
+			if (playersTeam == null) {
+				// Creates the players team
+				playersTeam = scoreboard.registerNewTeam("players");
+				// Adds the players entry
+				playersTeam.addEntry(ChatColor.AQUA + "Players: ");
+			}
+			// Gets the numbers from the players team suffix
+			String[] playersTeamSuffix = playersTeam.getSuffix().split("/");
+			// Gets the current player count
+			int playerCount = Integer.parseInt(playersTeamSuffix[0]);
+			// Removes the player from the count
+			playerCount--;
+			// Sets the player count to the correct number
+			playersTeam.setSuffix(playerCount + "/" + playersTeamSuffix[1]);
+		}
+		
 		
 		// Returns if a game isn't running
 		if (infoBoard == null || !infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) return;
@@ -520,5 +564,60 @@ public class EventListener implements Listener {
 		
 		// Sets the new location for the event
 		event.setTo(goingTo);
+	}
+	
+	// Runs when a player changes gamemode
+	@EventHandler
+	public void onGameModeChange(PlayerGameModeChangeEvent event) {
+		// Gets the scoreboard manager
+		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		// Gets the scoreboard
+		Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+		// Loads the objective
+		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
+		
+		// Runs if player needs to be added to the player count on the scoreboard
+		if (infoBoard !=null && infoBoard.getScore(ChatColor.AQUA + "Players: ").isScoreSet()) {
+			// Runs if the player is switching to survival mode
+			if (event.getNewGameMode().equals(GameMode.SURVIVAL)) {
+				// Gets the gamemode team 
+				Team playersTeam = scoreboard.getTeam("players");
+				// Runs if the team does not exist
+				if (playersTeam == null) {
+					// Creates the players team
+					playersTeam = scoreboard.registerNewTeam("players");
+					// Adds the players entry
+					playersTeam.addEntry(ChatColor.AQUA + "Players: ");
+				}
+				// Gets the numbers from the players team suffix
+				String[] playersTeamSuffix = playersTeam.getSuffix().split("/");
+				// Gets the current player count
+				int playerCount = Integer.parseInt(playersTeamSuffix[0]);
+				// Adds the player to the count
+				playerCount++;
+				// Sets the player count to the correct number
+				playersTeam.setSuffix(playerCount + "/" + playersTeamSuffix[1]);
+			}
+			// Runs if the player is switching away from survival
+			else if (event.getPlayer().getGameMode().equals(GameMode.SURVIVAL)) {
+				// Gets the gamemode team 
+				Team playersTeam = scoreboard.getTeam("players");
+				// Runs if the team does not exist
+				if (playersTeam == null) {
+					// Creates the players team
+					playersTeam = scoreboard.registerNewTeam("players");
+					// Adds the players entry
+					playersTeam.addEntry(ChatColor.AQUA + "Players: ");
+				}
+				// Gets the numbers from the players team suffix
+				String[] playersTeamSuffix = playersTeam.getSuffix().split("/");
+				// Gets the current player count
+				int playerCount = Integer.parseInt(playersTeamSuffix[0]);
+				// Removes the player from the count
+				playerCount--;
+				// Sets the player count to the correct number
+				playersTeam.setSuffix(playerCount + "/" + playersTeamSuffix[1]);
+			}
+		}
 	}
 }
