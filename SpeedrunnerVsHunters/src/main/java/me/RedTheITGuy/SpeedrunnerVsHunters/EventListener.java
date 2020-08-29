@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -19,8 +20,70 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 public class EventListener implements Listener {
+	// Runs when a player is has joined the game
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		// Stores the joining player
+		Player player = event.getPlayer();
+		
+		// Gets the scoreboard manager
+		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+		// Gets the scoreboard
+		Scoreboard scoreboard = scoreboardManager.getMainScoreboard();
+		// Loads the objective
+		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
+		
+		// Returns if the info board doensn't exist
+		if (infoBoard == null) return;
+		
+		// Runs if the player is joining a non game world
+		if (!player.getLocation().getWorld().getName().contains("svh-")) {
+			// Clears the player's inventory
+			player.getInventory().clear();
+			// Resets players xp
+			player.setExp(0);
+			
+			// Runs if a game is running and hunters have been released
+			if (infoBoard.getScore(ChatColor.AQUA + "Kills: ").isScoreSet()) {
+				// Gets the class for spawning the player
+				SpawnManager spawner = new SpawnManager();
+				// Sets the spawn location
+				player.teleportAsync(spawner.getSpawnLocation());
+			}
+		}
+		
+		// Creates the key for the boss bar
+		NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");
+		// Gets the boss bar
+		KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
+		// Adds the player to the boss bar if it exists
+		if (bossBar != null) bossBar.addPlayer(player);
+		
+		// Runs if a game is running
+		if (infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) {
+			// Runs if the player is not the runner
+			if (!scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) {
+				// Gets the hunters team
+				Team huntersTeam = scoreboard.getTeam("hunters");
+				// Adds the player to the hunters team if it exists
+				if (huntersTeam != null) huntersTeam.addEntry(player.getName());
+			}
+		}
+		
+		// Runs if the game is over
+		if (infoBoard.getScore(ChatColor.AQUA + "Winner: ").isScoreSet()) {
+			// Sets the player to spectator mode
+			player.setGameMode(GameMode.SPECTATOR);
+		}
+		else {
+			// Sets the player to survival mode
+			player.setGameMode(GameMode.SURVIVAL);
+		}
+	}
+	
 	// Runs when a player dies
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
