@@ -45,6 +45,14 @@ public class EventListener implements Listener {
 			player.getInventory().clear();
 			// Resets players xp
 			player.setExp(0);
+			// Heals player to full health
+			player.setHealth(20);
+			// Restores player's hunger
+			player.setFoodLevel(20);
+			// Restores players saturation
+			player.setSaturation(5);
+			// Restores players exhaustion
+			player.setExhaustion(0);
 			
 			// Runs if a game is running and hunters have been released
 			if (infoBoard.getScore(ChatColor.AQUA + "Kills: ").isScoreSet()) {

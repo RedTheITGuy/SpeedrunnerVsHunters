@@ -28,6 +28,19 @@ public class GameLogic {
 		final int headStart = config.getInt("game.headStart");
 		final int locationRevealTime = config.getInt("game.locationRevealTime");
 		final int resetTime = config.getInt("resetTime");
+
+		// Clears the runner's inventory
+		runner.getInventory().clear();
+		// Resets runners xp
+		runner.setExp(0);
+		// Heals runner to full health
+		runner.setHealth(20);
+		// Restores runner's hunger
+		runner.setFoodLevel(20);
+		// Restores runners saturation
+		runner.setSaturation(5);
+		// Restores runners exhaustion
+		runner.setExhaustion(0);
 		
 		// Teleports the runner into the world
 		runner.teleport(Bukkit.getWorld("svh-overworld").getSpawnLocation());
@@ -229,6 +242,19 @@ public class GameLogic {
 			    					
 			    					// Sends the player to the new world if they are not already in it
 			    					if (!player.getWorld().getName().contains("svh-")) spawner.spawnPlayer(player);
+
+			    					// Clears the player's inventory
+			    					player.getInventory().clear();
+			    					// Resets players xp
+			    					player.setExp(0);
+			    					// Heals player to full health
+			    					player.setHealth(20);
+			    					// Restores player's hunger
+			    					player.setFoodLevel(20);
+			    					// Restores players saturation
+			    					player.setSaturation(5);
+			    					// Restores players exhaustion
+			    					player.setExhaustion(0);
 			    				}
 			    				
 			    				// Enables the daylight cycle
