@@ -2,6 +2,7 @@ package me.RedTheITGuy.SpeedrunnerVsHunters;
 import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class SpawnManager {
@@ -21,6 +22,26 @@ public class SpawnManager {
 		teleportLocation.setZ(teleportLocation.getY() + ((random.nextDouble() * 50.0) - 25.0));
 		// Set the y to the highest empty block
 		teleportLocation.setY(teleportLocation.getWorld().getHighestBlockYAt(teleportLocation));
+		
+		// Gets the location for below the spawn location
+		Location belowSpawn = teleportLocation;
+		belowSpawn.setY(teleportLocation.getY() - 1);
+		// Gets the block below the spawn location
+		Block spawnBlock = Bukkit.getWorld("svh-overworld").getBlockAt(belowSpawn);
+		
+		// Runs while the spawn block cannot be collided with
+		while (spawnBlock.isPassable()) {
+			//Drop the spawn block down
+			belowSpawn.setY(belowSpawn.getY() - 1);
+			// Resets the spawn block
+			spawnBlock = Bukkit.getWorld("svh-overworld").getBlockAt(belowSpawn);
+		}
+		
+		// Runs again if the spawn block is unsafe to spawn on
+		if (spawnBlock.isLiquid()) return getSpawnLocation();
+		
+		// Sets the spawn location to above the spawn block
+		teleportLocation.setY(belowSpawn.getY() + 1);
 		
 		// Returns the location
 		return teleportLocation;
