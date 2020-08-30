@@ -37,11 +37,12 @@ public class SpawnManager {
 			spawnBlock = Bukkit.getWorld("svh-overworld").getBlockAt(belowSpawn);
 		}
 		
-		// Runs again if the spawn block is unsafe to spawn on
-		if (spawnBlock.isLiquid()) return getSpawnLocation();
-		
 		// Sets the spawn location to above the spawn block
 		teleportLocation.setY(belowSpawn.getY() + 1);
+		
+		// Runs method again if user is spawning in a liquid
+		if (Bukkit.getWorld("svh-overworld").getBlockAt(teleportLocation).isLiquid()) return getSpawnLocation();
+		
 		
 		// Returns the location
 		return teleportLocation;
