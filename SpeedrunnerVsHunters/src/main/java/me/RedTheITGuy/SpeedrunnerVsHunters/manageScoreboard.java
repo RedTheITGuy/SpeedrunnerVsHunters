@@ -1,11 +1,9 @@
 package me.RedTheITGuy.SpeedrunnerVsHunters;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -53,8 +51,15 @@ public class manageScoreboard {
 		
 		// Creates the key for the boss bar
 		NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");
-		// Removes the bar
-		Bukkit.getServer().removeBossBar(barKey);
+		// Gets the boss bar
+		KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
+		// Runs if the boss bar exists
+		if (bossBar != null) {
+			// Removes all players from the boss bar
+			bossBar.removeAll();
+			// Removes the bar
+			Bukkit.getServer().removeBossBar(barKey);
+		}
 		
 		// Gets the scoreboard manager
 		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();

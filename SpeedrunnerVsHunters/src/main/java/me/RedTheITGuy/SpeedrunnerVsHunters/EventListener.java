@@ -20,12 +20,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
-import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 public class EventListener implements Listener {
 	// Runs when a player is has joined the game
@@ -33,6 +31,13 @@ public class EventListener implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent event) {
 		// Stores the joining player
 		Player player = event.getPlayer();
+		
+		// Creates the key for the boss bar
+		NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");
+		// Gets the boss bar
+		KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
+		// Adds the player to the boss bar if it exists
+		if (bossBar != null) bossBar.addPlayer(player);
 		
 		// Gets the scoreboard manager
 		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
@@ -73,13 +78,6 @@ public class EventListener implements Listener {
 				player.teleportAsync(spawner.getSpawnLocation());
 			}
 		}
-		
-		// Creates the key for the boss bar
-		NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");
-		// Gets the boss bar
-		KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
-		// Adds the player to the boss bar if it exists
-		if (bossBar != null) bossBar.addPlayer(player);
 		
 		// Runs if a game is running
 		if (infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) {
