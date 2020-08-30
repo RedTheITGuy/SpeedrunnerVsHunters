@@ -50,10 +50,6 @@ public class manageScoreboard {
 	public void resetBoard() {
 		// Reloads the config
 		Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").reloadConfig();
-		// Loads the config
-		FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
-		// Gets info from the config
-		int minPlayers = config.getInt("minPlayers");
 		
 		// Creates the key for the boss bar
 		NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");
@@ -106,22 +102,11 @@ public class manageScoreboard {
 		// Adds an empty entry for better spacing
 		svhGameInfo.getScore(ChatColor.DARK_BLUE.toString()).setScore(1);
 
-		// Gets the gamemode team 
-		Team playersTeam = scoreboard.getTeam("players");
-		// Creates the team if it doesn't exist
-		if (playersTeam == null) playersTeam = scoreboard.registerNewTeam("players");
-		// Adds the players entry
-		playersTeam.addEntry(ChatColor.AQUA + "Players: ");
-		// Creates the variable to store the online player count
-		int onlinePlayers = 0;
-		// Runs for all online players
-		for (Player player : Bukkit.getServer().getOnlinePlayers()) {
-			// Adds to the online player count if the player is in survival
-			if (player.getGameMode().equals(GameMode.SURVIVAL)) onlinePlayers++;
-		}
-		// Sets the info in the players entry
-		playersTeam.setSuffix(onlinePlayers + "/" + minPlayers);
 		// Sets the score for the entry
 		svhGameInfo.getScore(ChatColor.AQUA + "Players: ").setScore(0);
+		// Gets the class to set the player count
+		PlayerManager playerManager = new PlayerManager();
+		// Sets the player count
+		playerManager.setPlayerCount(0);
 	}
 }
