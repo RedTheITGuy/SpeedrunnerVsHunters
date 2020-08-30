@@ -149,6 +149,8 @@ public class GameLogic {
 		
 		// Gets the bukkit scheduler
 		final BukkitScheduler scheduler = Bukkit.getScheduler();
+		// Stops all tasks scheduled by this plugin
+		scheduler.cancelTasks(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"));
 		// Runs every 20 ticks (second)
 		scheduler.runTaskTimer(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), new Runnable() {
 			public void run() {
