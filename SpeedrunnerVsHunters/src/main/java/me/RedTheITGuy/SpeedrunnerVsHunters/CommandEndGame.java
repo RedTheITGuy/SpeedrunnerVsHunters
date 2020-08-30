@@ -18,7 +18,7 @@ public class CommandEndGame implements CommandExecutor {
 		// Loads the objective
 		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
 		
-		// Runs if there is a objective and that objective has the runner's name (a game is running)
+		// Runs if there is not objective or the objective does not have the runner's name (a game is not running)
 		if (infoBoard == null || !infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) {
 			// Tells the sender a game is running
 			sender.sendMessage(ChatColor.DARK_RED + "" + ChatColor.BOLD + "[SVH] " + ChatColor.RESET + "There is no game currently running.");

@@ -29,5 +29,6 @@ public class Main extends JavaPlugin {
 		// Registers the commands
 		this.getCommand("startgame").setExecutor(new CommandStartGame());
 		this.getCommand("endgame").setExecutor(new CommandEndGame());
+		this.getCommand("goto").setExecutor(new CommandGoTo());
 	}
 }

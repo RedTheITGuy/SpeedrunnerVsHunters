@@ -1,5 +1,5 @@
 name: SpeedrunnerVsHunters
-version: 0.21
+version: 0.22
 description: The plugin to run the logic for the speedrunner vs hunters Minecraft gamemode.
 main: me.RedTheITGuy.SpeedrunnerVsHunters.Main
 api-version: 1.16
@@ -14,6 +14,10 @@ commands:
     description: End the current round of Speedrunner vs Hunters
     usage: "/endgame"
     permission: svh.endgame
+  goto:
+    description: Teleport to a player in spectator mode
+    usage: "/goto <player-name/runner>"
+    permission: svh.goto
 
 permissions:
   svh.startgame:
@@ -22,3 +26,6 @@ permissions:
   svh.endgame:
     description: Allows the player to end a game of Speedrunner vs Hunters
     default: op
+  svh.goto:
+    description: Allows the player to use the goto command
+    default: true
