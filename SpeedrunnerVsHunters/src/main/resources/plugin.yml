@@ -1,10 +1,11 @@
 name: SpeedrunnerVsHunters
-version: 0.22
+version: 0.23
 description: The plugin to run the logic for the speedrunner vs hunters Minecraft gamemode.
 main: me.RedTheITGuy.SpeedrunnerVsHunters.Main
 api-version: 1.16
 author: Red_the_IT_Guy
 load: POSTWORLD
+depend: [WorldGuard]
 commands:
   startgame:
     description: Start a round of Speedrunner vs Hunters

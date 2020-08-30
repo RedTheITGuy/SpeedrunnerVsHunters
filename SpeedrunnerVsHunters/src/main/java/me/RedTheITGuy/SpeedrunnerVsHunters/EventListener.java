@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -24,6 +25,14 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
+
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.GlobalProtectedRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 
 public class EventListener implements Listener {
 	// Runs when a player is has joined the game
@@ -95,6 +104,34 @@ public class EventListener implements Listener {
 				// Gets info from the config
 				final int headStart = config.getInt("game.headStart");
 				final int locationRevealTime = config.getInt("game.locationRevealTime");
+				
+				// Gets the region container to load the regions
+				RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+				// Runs for every world
+				for (World world : Bukkit.getServer().getWorlds()) {
+					// Goes to the next world if the world is not a game world
+					if (!world.getName().contains("svh-")) continue;
+					
+					// Converts the world to a world edit world
+					com.sk89q.worldedit.world.World WorldEditWorld = BukkitAdapter.adapt(world);
+					// Gets the global region for the world
+					ProtectedRegion globalRegion = container.get(WorldEditWorld).getRegion("__global__");
+					// Runs if the region doesn't exist
+					if (globalRegion == null) {
+						// Creates the global region because I have to create it because... ?
+						globalRegion = new GlobalProtectedRegion("__global__");
+						// Adds the region to the world
+						container.get(WorldEditWorld).addRegion(globalRegion);
+					}
+					// Enables PVP in that region
+					globalRegion.setFlag(Flags.PVP, StateFlag.State.ALLOW);
+					// Enables mining and placing in the region
+					globalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.ALLOW);
+					// Enables movement in the region
+					globalRegion.setFlag(Flags.ENTRY, StateFlag.State.ALLOW);
+					// Enables damage in the region
+					globalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.DENY);
+				}
 				
 				// Runs if the player is in the end
 				if (player.getWorld().getEnvironment().equals(Environment.THE_END)) {
@@ -204,6 +241,34 @@ public class EventListener implements Listener {
 		
 		// Returns if the player is not the runner
 		if (!scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) return;
+		
+		// Gets the region container to load the regions
+		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+		// Runs for every world
+		for (World world : Bukkit.getServer().getWorlds()) {
+			// Goes to the next world if the world is not a game world
+			if (!world.getName().contains("svh-")) continue;
+			
+			// Converts the world to a world edit world
+			com.sk89q.worldedit.world.World WorldEditWorld = BukkitAdapter.adapt(world);
+			// Gets the global region for the world
+			ProtectedRegion globalRegion = container.get(WorldEditWorld).getRegion("__global__");
+			// Runs if the region doesn't exist
+			if (globalRegion == null) {
+				// Creates the global region because I have to create it because... ?
+				globalRegion = new GlobalProtectedRegion("__global__");
+				// Adds the region to the world
+				container.get(WorldEditWorld).addRegion(globalRegion);
+			}
+			// Disables PVP in that region
+			globalRegion.setFlag(Flags.PVP, StateFlag.State.DENY);
+			// Disables mining and placing in the region
+			globalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.DENY);
+			// Disables movement in the region
+			globalRegion.setFlag(Flags.ENTRY, StateFlag.State.DENY);
+			// Disables damage in the region
+			globalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
+		}
 		
 		// Creates the key for the boss bar
 		NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");

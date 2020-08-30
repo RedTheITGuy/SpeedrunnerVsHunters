@@ -1,11 +1,22 @@
 package me.RedTheITGuy.SpeedrunnerVsHunters;
 import java.io.File;
 import java.nio.file.Files;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.configuration.file.FileConfiguration;
+
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.GlobalProtectedRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
 
 public class GenerateWorlds {
 	public void generate(boolean override) {
@@ -65,6 +76,9 @@ public class GenerateWorlds {
 			// Deletes the world file
 			deleteFile(endFolder);
 		}
+		
+		// Gets the region container to load the regions
+		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
 
 		// Logs that the overworld is being loaded to the console
 		Bukkit.getLogger().info("Loading overworld");
@@ -81,6 +95,26 @@ public class GenerateWorlds {
 		overworld.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
 		overworld.setGameRule(GameRule.DO_WEATHER_CYCLE, false);
 		overworld.setGameRule(GameRule.DO_INSOMNIA, false);
+		
+		// Converts the world to a world edit world
+		com.sk89q.worldedit.world.World overworldWE = BukkitAdapter.adapt(overworld);
+		// Gets the global region for the world
+		ProtectedRegion overworldGlobalRegion = container.get(overworldWE).getRegion("__global__");
+		// Runs if the region doesn't exist
+		if (overworldGlobalRegion == null) {
+			// Creates the global region because I have to create it because... ?
+			overworldGlobalRegion = new GlobalProtectedRegion("__global__");
+			// Adds the region to the world
+			container.get(overworldWE).addRegion(overworldGlobalRegion);
+		}
+		// Disables PVP in that region
+		overworldGlobalRegion.setFlag(Flags.PVP, StateFlag.State.DENY);
+		// Disables mining and placing in the region
+		overworldGlobalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.DENY);
+		// Disables movement in the region
+		overworldGlobalRegion.setFlag(Flags.ENTRY, StateFlag.State.DENY);
+		// Disables damage in the region
+		overworldGlobalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
 
 		// Logs that the nether is being loaded to the console
 		Bukkit.getLogger().info("Loading nether");
@@ -94,6 +128,26 @@ public class GenerateWorlds {
 		nether.getWorldBorder().setSize(netherBorderSize);
 		// Sets the game rules for the new world
 		nether.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+		
+		// Converts the world to a world edit world
+		com.sk89q.worldedit.world.World netherWE = BukkitAdapter.adapt(nether);
+		// Gets the global region for the world
+		ProtectedRegion netherGlobalRegion = container.get(netherWE).getRegion("__global__");
+		// Runs if the region doesn't exist
+		if (netherGlobalRegion == null) {
+			// Creates the global region because I have to create it because... ?
+			netherGlobalRegion = new GlobalProtectedRegion("__global__");
+			// Adds the region to the world
+			container.get(netherWE).addRegion(netherGlobalRegion);
+		}
+		// Disables PVP in that region
+		netherGlobalRegion.setFlag(Flags.PVP, StateFlag.State.DENY);
+		// Disables mining and placing in the region
+		netherGlobalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.DENY);
+		// Disables movement in the region
+		netherGlobalRegion.setFlag(Flags.ENTRY, StateFlag.State.DENY);
+		// Disables damage in the region
+		netherGlobalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
 
 		// Logs that the end is being loaded to the console
 		Bukkit.getLogger().info("Loading end");
@@ -107,6 +161,26 @@ public class GenerateWorlds {
 		end.getWorldBorder().setSize(endBorderSize);
 		// Sets the game rules for the new world
 		end.setGameRule(GameRule.ANNOUNCE_ADVANCEMENTS, false);
+		
+		// Converts the world to a world edit world
+		com.sk89q.worldedit.world.World endWE = BukkitAdapter.adapt(end);
+		// Gets the global region for the world
+		ProtectedRegion endGlobalRegion = container.get(endWE).getRegion("__global__");
+		// Runs if the region doesn't exist
+		if (endGlobalRegion == null) {
+			// Creates the global region because I have to create it because... ?
+			endGlobalRegion = new GlobalProtectedRegion("__global__");
+			// Adds the region to the world
+			container.get(endWE).addRegion(endGlobalRegion);
+		}
+		// Disables PVP in that region
+		endGlobalRegion.setFlag(Flags.PVP, StateFlag.State.DENY);
+		// Disables mining and placing in the region
+		endGlobalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.DENY);
+		// Disables movement in the region
+		endGlobalRegion.setFlag(Flags.ENTRY, StateFlag.State.DENY);
+		// Disables damage in the region
+		endGlobalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
 		
 		// Disables the whitelist
 		Bukkit.setWhitelist(false);

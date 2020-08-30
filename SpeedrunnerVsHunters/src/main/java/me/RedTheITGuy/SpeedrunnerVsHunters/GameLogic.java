@@ -18,6 +18,14 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldguard.WorldGuard;
+import com.sk89q.worldguard.protection.flags.Flags;
+import com.sk89q.worldguard.protection.flags.StateFlag;
+import com.sk89q.worldguard.protection.regions.GlobalProtectedRegion;
+import com.sk89q.worldguard.protection.regions.ProtectedRegion;
+import com.sk89q.worldguard.protection.regions.RegionContainer;
+
 public class GameLogic {
 	public void playGame(final Player runner) {
 		// Loads the config
@@ -27,6 +35,34 @@ public class GameLogic {
 		final int locationRevealTime = config.getInt("game.locationRevealTime");
 		final int resetTime = config.getInt("resetTime");
 		final int runnerLeaveTime = config.getInt("game.runnerLeaveTime");
+		
+		// Gets the region container to load the regions
+		RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
+		// Runs for every world
+		for (World world : Bukkit.getServer().getWorlds()) {
+			// Goes to the next world if the world is not a game world
+			if (!world.getName().contains("svh-")) continue;
+			
+			// Converts the world to a world edit world
+			com.sk89q.worldedit.world.World WorldEditWorld = BukkitAdapter.adapt(world);
+			// Gets the global region for the world
+			ProtectedRegion globalRegion = container.get(WorldEditWorld).getRegion("__global__");
+			// Runs if the region doesn't exist
+			if (globalRegion == null) {
+				// Creates the global region because I have to create it because... ?
+				globalRegion = new GlobalProtectedRegion("__global__");
+				// Adds the region to the world
+				container.get(WorldEditWorld).addRegion(globalRegion);
+			}
+			// Enables PVP in that region
+			globalRegion.setFlag(Flags.PVP, StateFlag.State.ALLOW);
+			// Enables mining and placing in the region
+			globalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.ALLOW);
+			// Enables movement in the region
+			globalRegion.setFlag(Flags.ENTRY, StateFlag.State.ALLOW);
+			// Enables damage in the region
+			globalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.DENY);
+		}
 
 		// Clears the runner's inventory
 		runner.getInventory().clear();
