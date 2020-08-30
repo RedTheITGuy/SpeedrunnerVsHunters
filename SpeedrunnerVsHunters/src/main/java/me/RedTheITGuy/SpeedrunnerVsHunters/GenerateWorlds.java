@@ -113,8 +113,16 @@ public class GenerateWorlds {
 		overworldGlobalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.DENY);
 		// Disables movement in the region
 		overworldGlobalRegion.setFlag(Flags.ENTRY, StateFlag.State.DENY);
-		// Disables damage in the region
-		overworldGlobalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
+		// Disables creeper explosions in the region
+		overworldGlobalRegion.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		overworldGlobalRegion.setFlag(Flags.GHAST_FIREBALL, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		overworldGlobalRegion.setFlag(Flags.MOB_DAMAGE, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		overworldGlobalRegion.setFlag(Flags.USE, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		overworldGlobalRegion.setFlag(Flags.FALL_DAMAGE, StateFlag.State.DENY);
 
 		// Logs that the nether is being loaded to the console
 		Bukkit.getLogger().info("Loading nether");
@@ -146,8 +154,17 @@ public class GenerateWorlds {
 		netherGlobalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.DENY);
 		// Disables movement in the region
 		netherGlobalRegion.setFlag(Flags.ENTRY, StateFlag.State.DENY);
-		// Disables damage in the region
-		netherGlobalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
+		// Disables creeper explosions in the region
+		netherGlobalRegion.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		netherGlobalRegion.setFlag(Flags.GHAST_FIREBALL, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		netherGlobalRegion.setFlag(Flags.MOB_DAMAGE, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		netherGlobalRegion.setFlag(Flags.USE, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		netherGlobalRegion.setFlag(Flags.FALL_DAMAGE, StateFlag.State.DENY);
+
 
 		// Logs that the end is being loaded to the console
 		Bukkit.getLogger().info("Loading end");
@@ -179,8 +196,17 @@ public class GenerateWorlds {
 		endGlobalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.DENY);
 		// Disables movement in the region
 		endGlobalRegion.setFlag(Flags.ENTRY, StateFlag.State.DENY);
-		// Disables damage in the region
-		endGlobalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
+		// Disables creeper explosions in the region
+		endGlobalRegion.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		endGlobalRegion.setFlag(Flags.GHAST_FIREBALL, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		endGlobalRegion.setFlag(Flags.MOB_DAMAGE, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		endGlobalRegion.setFlag(Flags.USE, StateFlag.State.DENY);
+		// Disables creeper explosions in the region
+		endGlobalRegion.setFlag(Flags.FALL_DAMAGE, StateFlag.State.DENY);
+
 		
 		// Disables the whitelist
 		Bukkit.setWhitelist(false);

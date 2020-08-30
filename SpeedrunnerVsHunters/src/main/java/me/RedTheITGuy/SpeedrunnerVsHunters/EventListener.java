@@ -129,8 +129,16 @@ public class EventListener implements Listener {
 					globalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.ALLOW);
 					// Enables movement in the region
 					globalRegion.setFlag(Flags.ENTRY, StateFlag.State.ALLOW);
-					// Enables damage in the region
-					globalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.DENY);
+					// Enables creeper explosions in the region
+					globalRegion.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.ALLOW);
+					// Enables creeper explosions in the region
+					globalRegion.setFlag(Flags.GHAST_FIREBALL, StateFlag.State.ALLOW);
+					// Enables creeper explosions in the region
+					globalRegion.setFlag(Flags.MOB_DAMAGE, StateFlag.State.ALLOW);
+					// Enables creeper explosions in the region
+					globalRegion.setFlag(Flags.USE, StateFlag.State.ALLOW);
+					// Enables creeper explosions in the region
+					globalRegion.setFlag(Flags.FALL_DAMAGE, StateFlag.State.ALLOW);
 				}
 				
 				// Runs if the player is in the end
@@ -266,8 +274,16 @@ public class EventListener implements Listener {
 			globalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.DENY);
 			// Disables movement in the region
 			globalRegion.setFlag(Flags.ENTRY, StateFlag.State.DENY);
-			// Disables damage in the region
-			globalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.ALLOW);
+			// Disables creeper explosions in the region
+			globalRegion.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.DENY);
+			// Disables creeper explosions in the region
+			globalRegion.setFlag(Flags.GHAST_FIREBALL, StateFlag.State.DENY);
+			// Disables creeper explosions in the region
+			globalRegion.setFlag(Flags.MOB_DAMAGE, StateFlag.State.DENY);
+			// Disables creeper explosions in the region
+			globalRegion.setFlag(Flags.USE, StateFlag.State.DENY);
+			// Disables creeper explosions in the region
+			globalRegion.setFlag(Flags.FALL_DAMAGE, StateFlag.State.DENY);
 		}
 		
 		// Creates the key for the boss bar

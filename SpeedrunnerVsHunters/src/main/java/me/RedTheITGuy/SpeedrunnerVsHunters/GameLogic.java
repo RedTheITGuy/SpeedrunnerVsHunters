@@ -60,8 +60,16 @@ public class GameLogic {
 			globalRegion.setFlag(Flags.PASSTHROUGH, StateFlag.State.ALLOW);
 			// Enables movement in the region
 			globalRegion.setFlag(Flags.ENTRY, StateFlag.State.ALLOW);
-			// Enables damage in the region
-			globalRegion.setFlag(Flags.INVINCIBILITY, StateFlag.State.DENY);
+			// Enables creeper explosions in the region
+			globalRegion.setFlag(Flags.CREEPER_EXPLOSION, StateFlag.State.ALLOW);
+			// Enables creeper explosions in the region
+			globalRegion.setFlag(Flags.GHAST_FIREBALL, StateFlag.State.ALLOW);
+			// Enables creeper explosions in the region
+			globalRegion.setFlag(Flags.MOB_DAMAGE, StateFlag.State.ALLOW);
+			// Enables creeper explosions in the region
+			globalRegion.setFlag(Flags.USE, StateFlag.State.ALLOW);
+			// Enables creeper explosions in the region
+			globalRegion.setFlag(Flags.FALL_DAMAGE, StateFlag.State.ALLOW);
 		}
 
 		// Clears the runner's inventory
