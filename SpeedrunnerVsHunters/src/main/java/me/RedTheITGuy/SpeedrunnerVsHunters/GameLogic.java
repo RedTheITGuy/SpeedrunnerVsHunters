@@ -280,6 +280,9 @@ public class GameLogic {
 			    					
 			    					// Sends the player to the new world if they are not already in it
 			    					if (!player.getWorld().getName().contains("svh-")) spawner.spawnPlayer(player);
+			    					
+			    					// Returns if the player is the runner
+			    					if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) continue;
 
 			    					// Clears the player's inventory
 			    					player.getInventory().clear();
