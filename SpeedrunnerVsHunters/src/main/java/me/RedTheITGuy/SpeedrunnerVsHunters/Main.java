@@ -28,5 +28,6 @@ public class Main extends JavaPlugin {
 		Bukkit.getServer().getPluginManager().registerEvents(new EventListener(), this);
 		// Registers the commands
 		this.getCommand("startgame").setExecutor(new CommandStartGame());
+		this.getCommand("endgame").setExecutor(new CommandEndGame());
 	}
 }

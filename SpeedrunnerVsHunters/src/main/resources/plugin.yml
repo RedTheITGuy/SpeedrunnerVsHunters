@@ -1,5 +1,5 @@
 name: SpeedrunnerVsHunters
-version: 0.19
+version: 0.20
 description: The plugin to run the logic for the speedrunner vs hunters Minecraft gamemode.
 main: me.RedTheITGuy.SpeedrunnerVsHunters.Main
 api-version: 1.16
@@ -10,8 +10,15 @@ commands:
     description: Start a round of Speedrunner vs Hunters
     usage: "/startgame <player-name>"
     permission: svh.startgame
+  endgame:
+    description: End the current round of Speedrunner vs Hunters
+    usage: "/endgame"
+    permission: svh.endgame
 
 permissions:
   svh.startgame:
     description: Allows the player to start a game of Speedrunner vs Hunters
+    default: op
+  svh.endgame:
+    description: Allows the player to end a game of Speedrunner vs Hunters
     default: op
