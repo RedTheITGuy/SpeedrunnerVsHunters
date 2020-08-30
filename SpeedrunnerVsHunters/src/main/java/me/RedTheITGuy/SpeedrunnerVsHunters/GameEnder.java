@@ -209,7 +209,7 @@ public class GameEnder {
 			player.setExp(0);
 			
 			// Sends a title to the player to let them know the game has ended
-			player.sendTitle(ChatColor.GOLD + "The Hunters Win!", ChatColor.AQUA + "The speedrunner quit.", 10, 70, 20);
+			player.sendTitle(ChatColor.GOLD + "The Hunters Win!", ChatColor.AQUA + "The game was forfeited.", 10, 70, 20);
 			// Plays a sound to draw attention to the start of the game
 			player.playSound(player.getLocation(), Sound.ENTITY_GHAST_HURT, SoundCategory.VOICE, 10F, 1F);
 		}
