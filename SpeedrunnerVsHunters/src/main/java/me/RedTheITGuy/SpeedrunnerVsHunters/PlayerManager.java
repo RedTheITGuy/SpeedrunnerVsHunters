@@ -1,7 +1,6 @@
 package me.RedTheITGuy.SpeedrunnerVsHunters;
 import java.util.ArrayList;
 import java.util.Random;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
