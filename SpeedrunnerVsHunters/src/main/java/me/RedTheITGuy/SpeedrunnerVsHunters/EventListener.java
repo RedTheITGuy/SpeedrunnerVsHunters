@@ -89,7 +89,7 @@ public class EventListener implements Listener {
 				if (huntersTeam != null) huntersTeam.addEntry(player.getName());
 			}
 			// Runs if the player is the runner and there is a boss bar
-			else if (bossBar != null){
+			else if (bossBar != null) {
 				// Loads the config
 				FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
 				// Gets info from the config
@@ -153,6 +153,14 @@ public class EventListener implements Listener {
 				    	// Sets the bars progress
 				    	bossBar.setProgress(barProgress);
 					}
+				}
+				
+				// Runs for every player
+				for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+					// Sends an action bar to let the player know the location has been revealed
+					onlinePlayer.sendActionBar(ChatColor.GOLD + "The runner has rejoined the server.");
+					// Plays a sound to draw attention to the location reveal
+					onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.VOICE, 10F, 1F);
 				}
 			}
 		}
@@ -221,6 +229,15 @@ public class EventListener implements Listener {
 		bossBar.setProgress(1.0);
 		// Sets the title of the boss bar
 		bossBar.setTitle(ChatColor.GOLD + "Game ending in " + resetTime + ":00");
+		
+		// Runs for every player
+		for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+			// Sends an action bar to let the player know the location has been revealed
+			onlinePlayer.sendActionBar(ChatColor.GOLD + "The runner has left the server.");
+			// Plays a sound to draw attention to the location reveal
+			onlinePlayer.playSound(onlinePlayer.getLocation(), Sound.ENTITY_GHAST_HURT, SoundCategory.VOICE, 10F, 1F);
+		}
+		
 	}
 	
 	// Runs when a player dies
