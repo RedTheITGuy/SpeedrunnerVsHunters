@@ -100,7 +100,7 @@ public class manageScoreboard {
 		// Adds the gamemode entry
 		gamemodeTeam.addEntry(ChatColor.AQUA + "Gamemode: ");
 		// Sets the info in the gamemode entry
-		gamemodeTeam.setSuffix("Speedrunner vs Hunters");
+		gamemodeTeam.setSuffix("Stop the Speedrunner");
 		// Sets the score for the entry so it displays
 		svhGameInfo.getScore(ChatColor.AQUA + "Gamemode: ").setScore(2);
 		
