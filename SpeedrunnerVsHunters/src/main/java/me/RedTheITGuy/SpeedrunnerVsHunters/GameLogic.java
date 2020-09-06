@@ -285,8 +285,13 @@ public class GameLogic {
 			    					// Plays a sound to draw attention to the hunters release
 			    					player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.VOICE, 10F, 1F);
 			    					
-			    					// Sends the player to the new world if they are not already in it
-			    					if (!player.getWorld().getName().contains("svh-")) spawner.spawnPlayer(player);
+			    					// Runs if the player is not already in the game world
+			    					if (!player.getWorld().getName().contains("svh-")) {
+			    						// Gets the game world
+			    						World world = Bukkit.getWorld("svh-overworld");
+			    						// Spawns the player in the world
+			    						spawner.spawnPlayer(player, world);
+			    					}
 			    					
 			    					// Returns if the player is the runner
 			    					if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) continue;

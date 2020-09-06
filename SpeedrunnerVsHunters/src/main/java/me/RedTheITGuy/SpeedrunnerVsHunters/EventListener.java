@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -49,14 +50,48 @@ public class EventListener implements Listener {
 		// Returns if the info board doensn't exist
 		if (infoBoard == null) return;
 		
-
-		// Gets the class to set the player count
-		PlayerManager playerManager = new PlayerManager();
-		// Sets the player count
-		playerManager.setPlayerCount(0);
-		
+		// Runs if a game is not running
+		if (!infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) {
+			// Gets the class to set the player count
+			PlayerManager playerManager = new PlayerManager();
+			// Sets the player count
+			playerManager.setPlayerCount(0);
+			
+			// Clears the player's inventory
+			player.getInventory().clear();
+			// Resets players xp
+			player.setExp(0);
+			// Heals player to full health
+			player.setHealth(20);
+			// Restores player's hunger
+			player.setFoodLevel(20);
+			// Restores players saturation
+			player.setSaturation(5);
+			// Restores players exhaustion
+			player.setExhaustion(0);
+			
+			// Creates the variable to store the world
+			World world = null;
+			// Runs for all the worlds in the server
+			for (World currentWorld : Bukkit.getWorlds()) {
+				// Continues if the world is not the right world
+				if (!currentWorld.getEnvironment().equals(Environment.NORMAL) || currentWorld.getName().contains("svh-")) continue;
+				
+				// Sets the world
+				world = currentWorld;
+				// Exits the for loop
+				break;
+			}
+			// Runs if the world is not null
+			if (world != null) {
+				// Gets the class for spawning the player
+				SpawnManager spawner = new SpawnManager();
+				// Sets the spawn location
+				spawner.spawnPlayer(player, world);				
+			}
+		}
 		// Runs if the player is joining a non game world
-		if (!player.getLocation().getWorld().getName().contains("svh-")) {
+		else if (!player.getLocation().getWorld().getName().contains("svh-")) {
 			// Clears the player's inventory
 			player.getInventory().clear();
 			// Resets players xp
@@ -72,10 +107,12 @@ public class EventListener implements Listener {
 			
 			// Runs if a game is running and hunters have been released
 			if (infoBoard.getScore(ChatColor.AQUA + "Kills: ").isScoreSet()) {
+				// Gets the game world
+				World world = Bukkit.getWorld("svh-overworld");
 				// Gets the class for spawning the player
 				SpawnManager spawner = new SpawnManager();
 				// Sets the spawn location
-				player.teleportAsync(spawner.getSpawnLocation());
+				spawner.spawnPlayer(player, world);
 			}
 		}
 		
@@ -307,10 +344,12 @@ public class EventListener implements Listener {
 		
 		// Runs if the player is not going to spawn in the game world
 		if (!event.getRespawnLocation().getWorld().getName().contains("svh-")) {
+			// Gets the game world
+			World world = Bukkit.getWorld("svh-overworld");
 			// Gets the class for spawning the player
 			SpawnManager spawner = new SpawnManager();
 			// Sets the spawn location
-			event.setRespawnLocation(spawner.getSpawnLocation());
+			event.setRespawnLocation(spawner.getSpawnLocation(world));
 		}
 	}
 	
