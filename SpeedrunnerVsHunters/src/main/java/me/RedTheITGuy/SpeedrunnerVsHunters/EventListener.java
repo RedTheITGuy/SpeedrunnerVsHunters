@@ -253,8 +253,8 @@ public class EventListener implements Listener {
 		// Loads the objective
 		Objective infoBoard = scoreboard.getObjective("svhGameInfo");
 		
-		// Exit method if the board doesn't exist or a game isn't running
-		if (infoBoard == null || !infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) return;
+		// Exit method if the board doesn't exist, a game isn't running or if the runner team doesn't exist
+		if (infoBoard == null || !infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet() || scoreboard.getTeam("runnerName") == null) return;
 		
 		// Runs if the dead player was the runner
 		if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) {
