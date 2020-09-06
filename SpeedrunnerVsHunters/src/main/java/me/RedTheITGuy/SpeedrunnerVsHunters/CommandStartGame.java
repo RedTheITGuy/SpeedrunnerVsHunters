@@ -1,6 +1,7 @@
 package me.RedTheITGuy.SpeedrunnerVsHunters;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,6 +40,9 @@ public class CommandStartGame implements CommandExecutor {
 			// Exits the command and tells the player how to use the command
 			return false;
 		}
+		
+		// Sets the player to survival mode
+		runner.setGameMode(GameMode.SURVIVAL);
 		
 		// Loads the game logic class
 		GameLogic gameLogic = new GameLogic();
