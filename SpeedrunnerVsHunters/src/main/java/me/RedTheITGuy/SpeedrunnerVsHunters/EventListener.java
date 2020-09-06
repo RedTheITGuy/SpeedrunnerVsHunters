@@ -381,15 +381,55 @@ public class EventListener implements Listener {
 		// Sets that boolean to true if the player is the runner
 		if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) isRunner = true;
 		
-		// Stores the dimension the player is teleporting to
+		// Stores the location the player is teleporting to
 		Location goingTo = event.getTo();
+		// Stores the location the player is teleporting from 
+		Location from = event.getFrom();
 		
 		// Runs if the user is going through a nether portal
 		if(goingTo.getWorld().getEnvironment().equals(Environment.NETHER)) {
 			// Runs if the player is in the nether
-			if(event.getFrom().getWorld().getEnvironment().equals(Environment.NETHER)) {
+			if(from.getWorld().getEnvironment().equals(Environment.NETHER)) {
+				// Sets the world to go to
+				World goToWorld = Bukkit.getWorld("svh-overworld");
 				// Changes the world to the game world
-				goingTo.setWorld(Bukkit.getWorld("svh-overworld"));
+				goingTo.setWorld(goToWorld);
+				// Calculates the world border's radius
+				Double worldBorderRadius = goToWorld.getWorldBorder().getSize() / 2;
+				// Calculates the world border's limits
+				Double worldBorderMaxX = goToWorld.getWorldBorder().getCenter().getX() + worldBorderRadius;
+				Double worldBorderMinX = goToWorld.getWorldBorder().getCenter().getX() - worldBorderRadius;
+				Double worldBorderMaxZ = goToWorld.getWorldBorder().getCenter().getZ() + worldBorderRadius;
+				Double worldBorderMinZ = goToWorld.getWorldBorder().getCenter().getZ() - worldBorderRadius;
+				// Calculates the x location
+				Double x = from.getX() * 8;
+				// Runs if the x location is larger than the border
+				if (x > worldBorderMaxX) {
+					// Sets the x to the world border
+					x = worldBorderMaxX;
+				}
+				// Runs if the x location is smaller than the border
+				else if (x < worldBorderMinX) {
+					// Sets the x to the world border
+					x = worldBorderMinX;
+				}
+				
+				// Calculates the z location
+				Double z = from.getZ() * 8;
+				// Runs if the x location is larger than the border
+				if (z > worldBorderMaxZ) {
+					// Sets the x to the world border
+					z = worldBorderMaxZ;
+				}
+				// Runs if the x location is smaller than the border
+				else if (z < worldBorderMinZ) {
+					// Sets the x to the world border
+					z = worldBorderMinZ;
+				}
+				
+				
+				// Sets the going to location
+				goingTo.set(x, from.getY(), z);
 				
 				// Runs if the player is the runner
 				if (isRunner) {
@@ -419,8 +459,46 @@ public class EventListener implements Listener {
 			}
 			// Runs if the player is going to the nether
 			else {
+				// Sets the world to go to
+				World goToWorld = Bukkit.getWorld("svh-nether");
 				// Changes the world to the game world
-				goingTo.setWorld(Bukkit.getWorld("svh-nether"));
+				goingTo.setWorld(goToWorld);
+				// Calculates the world border's radius
+				Double worldBorderRadius = goToWorld.getWorldBorder().getSize() / 2;
+				// Calculates the world border's limits
+				Double worldBorderMaxX = goToWorld.getWorldBorder().getCenter().getX() + worldBorderRadius;
+				Double worldBorderMinX = goToWorld.getWorldBorder().getCenter().getX() - worldBorderRadius;
+				Double worldBorderMaxZ = goToWorld.getWorldBorder().getCenter().getZ() + worldBorderRadius;
+				Double worldBorderMinZ = goToWorld.getWorldBorder().getCenter().getZ() - worldBorderRadius;
+				// Calculates the x location
+				Double x = from.getX() / 8;
+				// Runs if the x location is larger than the border
+				if (x > worldBorderMaxX) {
+					// Sets the x to the world border
+					x = worldBorderMaxX;
+				}
+				// Runs if the x location is smaller than the border
+				else if (x < worldBorderMinX) {
+					// Sets the x to the world border
+					x = worldBorderMinX;
+				}
+				
+				// Calculates the z location
+				Double z = from.getZ() / 8;
+				// Runs if the x location is larger than the border
+				if (z > worldBorderMaxZ) {
+					// Sets the x to the world border
+					z = worldBorderMaxZ;
+				}
+				// Runs if the x location is smaller than the border
+				else if (z < worldBorderMinZ) {
+					// Sets the x to the world border
+					z = worldBorderMinZ;
+				}
+				
+				
+				// Sets the going to location
+				goingTo.set(x, from.getY(), z);
 				
 				// Runs if the player is the runner
 				if (isRunner) {
@@ -430,9 +508,6 @@ public class EventListener implements Listener {
     				// Adds the portal location label if it isn't there
     				if (!infoBoard.getScore(ChatColor.DARK_AQUA + "Portal Location:").isScoreSet()) infoBoard.getScore(ChatColor.DARK_AQUA + "Portal Location:").setScore(7);
     				
-    				// Stores the portal location
-    				Location portalLocation = event.getFrom();
-    				
     				// Gets the portal x coord team
     				Team xCoordTeam = scoreboard.getTeam("portalXcoord");
     				// Creates the x coord team if it doesn't exist
@@ -440,7 +515,7 @@ public class EventListener implements Listener {
     				// Adds the entry to the team
     				xCoordTeam.addEntry(ChatColor.AQUA + "Portal X: ");
     				// Adds the info for the entry
-    				xCoordTeam.setSuffix(portalLocation.getBlockX() + "");
+    				xCoordTeam.setSuffix(from.getBlockX() + "");
     				// Sets the score for the entry to display it in the objective
     				infoBoard.getScore(ChatColor.AQUA + "Portal X: ").setScore(6);
 
@@ -451,7 +526,7 @@ public class EventListener implements Listener {
     				// Adds the entry to the team
     				yCoordTeam.addEntry(ChatColor.AQUA + "Portal Y: ");
     				// Adds the info for the entry
-    				yCoordTeam.setSuffix(portalLocation.getBlockY() + "");
+    				yCoordTeam.setSuffix(from.getBlockY() + "");
     				// Sets the score for the entry to display it in the objective
     				infoBoard.getScore(ChatColor.AQUA + "Portal Y: ").setScore(5);
 
@@ -462,7 +537,7 @@ public class EventListener implements Listener {
     				// Adds the entry to the team
     				zCoordTeam.addEntry(ChatColor.AQUA + "Portal Z: ");
     				// Adds the info for the entry
-    				zCoordTeam.setSuffix(portalLocation.getBlockZ() + "");
+    				zCoordTeam.setSuffix(from.getBlockZ() + "");
     				// Sets the score for the entry to display it in the objective
     				infoBoard.getScore(ChatColor.AQUA + "Portal Z: ").setScore(4);
 					
@@ -479,7 +554,7 @@ public class EventListener implements Listener {
 		// Runs if the user is going through a end portal
 		else if(goingTo.getWorld().getEnvironment().equals(Environment.THE_END)) {
 			// Runs if the player is in the end
-			if(event.getFrom().getWorld().getEnvironment().equals(Environment.THE_END)) {
+			if(from.getWorld().getEnvironment().equals(Environment.THE_END)) {
 				// Sets the player to spectator mode
 				player.setGameMode(GameMode.SPECTATOR);
 				// Sets going to to the overworld spawn
@@ -535,9 +610,6 @@ public class EventListener implements Listener {
     				// Adds the portal location label if it isn't there
     				if (!infoBoard.getScore(ChatColor.DARK_AQUA + "Portal Location:").isScoreSet()) infoBoard.getScore(ChatColor.DARK_AQUA + "Portal Location:").setScore(7);
     				
-    				// Stores the portal location
-    				Location portalLocation = event.getFrom();
-    				
     				// Gets the portal x coord team
     				Team xCoordTeam = scoreboard.getTeam("portalXcoord");
     				// Creates the x coord team if it doesn't exist
@@ -545,7 +617,7 @@ public class EventListener implements Listener {
     				// Adds the entry to the team
     				xCoordTeam.addEntry(ChatColor.AQUA + "Portal X: ");
     				// Adds the info for the entry
-    				xCoordTeam.setSuffix(portalLocation.getBlockX() + "");
+    				xCoordTeam.setSuffix(from.getBlockX() + "");
     				// Sets the score for the entry to display it in the objective
     				infoBoard.getScore(ChatColor.AQUA + "Portal X: ").setScore(6);
 
@@ -556,7 +628,7 @@ public class EventListener implements Listener {
     				// Adds the entry to the team
     				yCoordTeam.addEntry(ChatColor.AQUA + "Portal Y: ");
     				// Adds the info for the entry
-    				yCoordTeam.setSuffix(portalLocation.getBlockY() + "");
+    				yCoordTeam.setSuffix(from.getBlockY() + "");
     				// Sets the score for the entry to display it in the objective
     				infoBoard.getScore(ChatColor.AQUA + "Portal Y: ").setScore(5);
 
@@ -567,7 +639,7 @@ public class EventListener implements Listener {
     				// Adds the entry to the team
     				zCoordTeam.addEntry(ChatColor.AQUA + "Portal Z: ");
     				// Adds the info for the entry
-    				zCoordTeam.setSuffix(portalLocation.getBlockZ() + "");
+    				zCoordTeam.setSuffix(from.getBlockZ() + "");
     				// Sets the score for the entry to display it in the objective
     				infoBoard.getScore(ChatColor.AQUA + "Portal Z: ").setScore(4);
 					
