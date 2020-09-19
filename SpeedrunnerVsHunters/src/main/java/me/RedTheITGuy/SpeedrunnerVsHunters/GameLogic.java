@@ -26,7 +26,7 @@ import com.sk89q.worldguard.protection.regions.ProtectedRegion;
 import com.sk89q.worldguard.protection.regions.RegionContainer;
 
 public class GameLogic {
-	public void playGame(final Player runner) {
+	public void playGame(Player runner) {
 		// Loads the config
 		FileConfiguration config = Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig();
 		// Gets info from the config
@@ -137,7 +137,7 @@ public class GameLogic {
 		// Adds the entry to the team
 		runnerName.addEntry(ChatColor.AQUA + "Runner: ");
 		// Adds the info for the entry
-		runnerName.setSuffix(runner.getDisplayName());
+		runnerName.setSuffix(runner.getName());
 		// Sets the score for the entry to display it in the objective
 		infoBoard.getScore(ChatColor.AQUA + "Runner: ").setScore(14);
 		
@@ -182,7 +182,7 @@ public class GameLogic {
 			// Displays the bar to the player
 			bossBar.addPlayer(player);
 			// Sends a title to the player to let them know the game has started
-			player.sendTitle(ChatColor.GOLD + runner.getDisplayName() + " is the runner!", ChatColor.AQUA + "Let the games begin...", 10, 70, 20);
+			player.sendTitle(ChatColor.GOLD + runner.getName() + " is the runner!", ChatColor.AQUA + "Let the games begin...", 10, 70, 20);
 			// Plays a sound to draw attention to the start of the game
 			player.playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_AMBIENT, SoundCategory.VOICE, 10F, 1F);
 			
@@ -294,7 +294,7 @@ public class GameLogic {
 			    					}
 			    					
 			    					// Returns if the player is the runner
-			    					if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) continue;
+			    					if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) continue;
 
 			    					// Clears the player's inventory
 			    					player.getInventory().clear();
@@ -329,6 +329,9 @@ public class GameLogic {
 			    			}
 			    			// Runs if the timer is for the location reveal
 					    	else if (barTitle.contains("Location revealed in")) {
+					    		// Get's the runner again to stop exploits
+					    		Player runner = Bukkit.getPlayer(scoreboard.getTeam("runnerName").getSuffix());
+					    		
 					    		// Adds an empty entry for better spacing if there is none
 			    				if (!infoBoard.getScore(ChatColor.LIGHT_PURPLE.toString()).isScoreSet()) infoBoard.getScore(ChatColor.LIGHT_PURPLE.toString()).setScore(13);
 			    				

@@ -119,7 +119,7 @@ public class EventListener implements Listener {
 		// Runs if a game is running
 		if (infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet()) {
 			// Runs if the player is not the runner
-			if (!scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) {
+			if (!scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) {
 				// Gets the hunters team
 				Team huntersTeam = scoreboard.getTeam("hunters");
 				// Adds the player to the hunters team if it exists
@@ -248,7 +248,7 @@ public class EventListener implements Listener {
 		if (infoBoard.getScore(ChatColor.AQUA + "Winner: ").isScoreSet()) return;
 		
 		// Returns if the player is not the runner
-		if (!scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) return;
+		if (!scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) return;
 		
 		// Creates the key for the boss bar
 		NamespacedKey barKey = new NamespacedKey(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), "svhBar");
@@ -294,7 +294,7 @@ public class EventListener implements Listener {
 		if (infoBoard == null || !infoBoard.getScore(ChatColor.AQUA + "Runner: ").isScoreSet() || scoreboard.getTeam("runnerName") == null) return;
 		
 		// Runs if the dead player was the runner
-		if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) {
+		if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) {
 			// Sets the player's gamemode to spectator
 			player.setGameMode(GameMode.SPECTATOR);
 			
@@ -379,7 +379,7 @@ public class EventListener implements Listener {
 		// Creates a boolean to store if the player is the runner
 		boolean isRunner = false;
 		// Sets that boolean to true if the player is the runner
-		if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) isRunner = true;
+		if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) isRunner = true;
 		
 		// Stores the location the player is teleporting to
 		Location goingTo = event.getTo();

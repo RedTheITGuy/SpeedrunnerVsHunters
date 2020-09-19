@@ -39,7 +39,7 @@ public class SpawnManager {
 		}
 		
 		// Sets the spawn location to above the spawn block
-		teleportLocation.setY(belowSpawn.getY() + 1);
+		teleportLocation.setY(belowSpawn.getY() + 2);
 		
 		// Runs method again if user is spawning in a liquid
 		if (world.getBlockAt(teleportLocation).isLiquid()) return getSpawnLocation(world);

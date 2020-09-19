@@ -127,7 +127,7 @@ public class GameEnder {
 			player.setExp(0);
 			
 			// Runs if the player is the runner
-			if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getDisplayName())) {
+			if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) {
 				// Sends a title to the player to let them know the game has ended
 				player.sendTitle(ChatColor.GOLD + title, ChatColor.AQUA + subtitleRunner, 10, 70, 20);
 			}
