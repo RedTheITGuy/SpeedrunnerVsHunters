@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>me.RedTheITGuy.SpeedrunnerVsHunters</groupId>
   <artifactId>SpeedrunnerVsHunters</artifactId>
-  <version>0.34</version>
+  <version>0.35</version>
   <name>SpeedrunnerVsHunters</name>
   <description>The plugin to run the logic for the speedrunner vs hunters Minecraft gamemode.</description>
 

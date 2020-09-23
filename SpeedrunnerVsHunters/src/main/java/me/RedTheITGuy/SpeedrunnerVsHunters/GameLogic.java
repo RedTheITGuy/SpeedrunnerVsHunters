@@ -75,6 +75,8 @@ public class GameLogic {
 		runner.getInventory().clear();
 		// Resets runners xp
 		runner.setExp(0);
+		// Resets the players level
+		runner.setLevel(0);
 		// Heals runner to full health
 		runner.setHealth(20);
 		// Restores runner's hunger
@@ -276,40 +278,6 @@ public class GameLogic {
 			    		if (minsLeft < 0) {
 			    			// Runs is the bar is for hunter release
 			    			if (barTitle.contains("Hunters released in")) {
-			    				// Gets the class for spawning the player
-			    				SpawnManager spawner = new SpawnManager();
-			    				// Runs for every player
-			    				for (Player player : Bukkit.getOnlinePlayers()) {
-			    					// Sends a title to the player to let them know the hunters have been released
-			    					player.sendTitle(ChatColor.GOLD + "Hunters released!", ChatColor.AQUA + "Good luck, you'll need it...", 10, 70, 20);
-			    					// Plays a sound to draw attention to the hunters release
-			    					player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.VOICE, 10F, 1F);
-			    					
-			    					// Runs if the player is not already in the game world
-			    					if (!player.getWorld().getName().contains("svh-")) {
-			    						// Gets the game world
-			    						World world = Bukkit.getWorld("svh-overworld");
-			    						// Spawns the player in the world
-			    						spawner.spawnPlayer(player, world);
-			    					}
-			    					
-			    					// Returns if the player is the runner
-			    					if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) continue;
-
-			    					// Clears the player's inventory
-			    					player.getInventory().clear();
-			    					// Resets players xp
-			    					player.setExp(0);
-			    					// Heals player to full health
-			    					player.setHealth(20);
-			    					// Restores player's hunger
-			    					player.setFoodLevel(20);
-			    					// Restores players saturation
-			    					player.setSaturation(5);
-			    					// Restores players exhaustion
-			    					player.setExhaustion(0);
-			    				}
-			    				
 			    				// Enables the daylight cycle
 			    				Bukkit.getWorld("svh-overworld").setGameRule(GameRule.DO_DAYLIGHT_CYCLE, true);
 			    				
@@ -326,6 +294,76 @@ public class GameLogic {
 			    				killCountTeam.setSuffix("0");
 			    				// Sets the score for the entry to display it in the objective
 			    				infoBoard.getScore(ChatColor.AQUA + "Kills: ").setScore(2);
+			    				
+			    				// Sets the seconds to 0
+				    			secsLeft = 0;
+				    			// Sets the minutes to the location reveal time
+				    			minsLeft = locationRevealTime;
+				    			// Sets the bar title to show it's now for location reveal
+				    			barTitle = "Location revealed in ";
+				    			
+				    			// Changes the title string to what the title will be
+						    	barTitle = barTitle.replaceAll("[:\\d]", "") + minsLeft + ":" + String.format("%02d", secsLeft);
+						    	// Sets the bars title
+						    	bossBar.setTitle(ChatColor.GOLD + barTitle);
+						    	// Sets the bars progress
+						    	bossBar.setProgress((((double) minsLeft * 60) + secsLeft) / (locationRevealTime * 60));
+			    				
+			    				// Gets the class for spawning the player
+			    				SpawnManager spawner = new SpawnManager();
+			    				// Runs for every player
+			    				for (Player player : Bukkit.getOnlinePlayers()) {
+			    					// Creates the time to wait before running
+			    					//long wait = 0;
+			    					// Creates increasing pauses to help with lag
+		    						scheduler.scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), new Runnable() {
+		    							public void run() {
+		    								// Sends a title to the player to let them know the hunters have been released
+					    					player.sendTitle(ChatColor.GOLD + "Hunters released!", ChatColor.AQUA + "Good luck, you'll need it...", 10, 70, 20);
+					    					// Plays a sound to draw attention to the hunters release
+					    					player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.VOICE, 10F, 1F);
+					    					
+					    					// Runs if the player is not already in the game world
+					    					if (!player.getWorld().getName().contains("svh-")) {
+					    						// Gets the game world
+					    						World world = Bukkit.getWorld("svh-overworld");
+					    						// Spawns the player in the world
+					    						spawner.spawnPlayer(player, world);
+					    						// Pauses for 10 ticks later to help with lag
+					    						scheduler.scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), new Runnable() {
+					    							public void run() {
+							    						Bukkit.getLogger().info("ran the delay");
+					    							}
+					    						}, 10);
+					    					}
+					    					
+					    					// Returns if the player is the runner
+					    					if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) return;
+
+					    					// Clears the player's inventory
+					    					player.getInventory().clear();
+					    					// Resets players xp
+					    					player.setExp(0);
+					    					// Resets the players level
+					    					player.setLevel(0);
+					    					// Resets the players level
+					    					player.setLevel(0);
+					    					// Heals player to full health
+					    					player.setHealth(20);
+					    					// Restores player's hunger
+					    					player.setFoodLevel(20);
+					    					// Restores players saturation
+					    					player.setSaturation(5);
+					    					// Restores players exhaustion
+					    					player.setExhaustion(0);
+		    							}
+		    						}, 10);
+		    						// Increases the wait time by 10
+		    						//wait += 10;
+			    				}
+			    				
+			    				// Exits the method
+			    				return;
 			    			}
 			    			// Runs if the timer is for the location reveal
 					    	else if (barTitle.contains("Location revealed in")) {

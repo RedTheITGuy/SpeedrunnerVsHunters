@@ -125,6 +125,8 @@ public class GameEnder {
 			player.getInventory().clear();
 			// Resets players xp
 			player.setExp(0);
+			// Resets the players level
+			player.setLevel(0);
 			
 			// Runs if the player is the runner
 			if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) {
@@ -206,6 +208,8 @@ public class GameEnder {
 			player.getInventory().clear();
 			// Resets players xp
 			player.setExp(0);
+			// Resets the players level
+			player.setLevel(0);
 			
 			// Sends a title to the player to let them know the game has ended
 			player.sendTitle(ChatColor.GOLD + "The Hunters Win!", ChatColor.AQUA + "The game was forfeited.", 10, 70, 20);

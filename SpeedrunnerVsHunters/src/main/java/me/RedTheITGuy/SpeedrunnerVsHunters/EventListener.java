@@ -96,6 +96,8 @@ public class EventListener implements Listener {
 			player.getInventory().clear();
 			// Resets players xp
 			player.setExp(0);
+			// Resets the players level
+			player.setLevel(0);
 			// Heals player to full health
 			player.setHealth(20);
 			// Restores player's hunger
@@ -302,6 +304,11 @@ public class EventListener implements Listener {
 			GameEnder gameEnder = new GameEnder();
 			// Runs the method to end the game
 			gameEnder.endGame(false);
+			
+			// Sends the death message to everyone on the server
+			for (Player member : Bukkit.getOnlinePlayers()) {
+				member.sendMessage(event.getDeathMessage());
+			}
 			
 			// Cancels the event
 			event.setCancelled(true);
