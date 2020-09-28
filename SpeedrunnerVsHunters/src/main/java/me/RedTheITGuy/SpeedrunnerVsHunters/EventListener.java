@@ -135,6 +135,9 @@ public class EventListener implements Listener {
 				final int headStart = config.getInt("game.headStart");
 				final int locationRevealTime = config.getInt("game.locationRevealTime");
 				
+				// Exits if the game is over
+				if (bossBar.getTitle().contains("Server reseting in")) return;
+				
 				// Runs if the player is in the end
 				if (player.getWorld().getEnvironment().equals(Environment.THE_END)) {
 					// Hides the boss bar
@@ -261,6 +264,9 @@ public class EventListener implements Listener {
 			// Creates the bar
 			bossBar = Bukkit.getServer().createBossBar(barKey, "", BarColor.BLUE, BarStyle.SOLID);
 		}
+		
+		// Exits if the game is over
+		if (bossBar.getTitle().contains("Server reseting in")) return;
 		
 		// Sets the bar to visible
 		bossBar.setVisible(true);

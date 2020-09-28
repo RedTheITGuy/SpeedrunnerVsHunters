@@ -314,7 +314,7 @@ public class GameLogic {
 			    				// Runs for every player
 			    				for (Player player : Bukkit.getOnlinePlayers()) {
 			    					// Creates the time to wait before running
-			    					//long wait = 0;
+			    					long wait = 0;
 			    					// Creates increasing pauses to help with lag
 		    						scheduler.scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), new Runnable() {
 		    							public void run() {
@@ -357,9 +357,9 @@ public class GameLogic {
 					    					// Restores players exhaustion
 					    					player.setExhaustion(0);
 		    							}
-		    						}, 10);
+		    						}, wait);
 		    						// Increases the wait time by 10
-		    						//wait += 10;
+		    						wait += 10;
 			    				}
 			    				
 			    				// Exits the method
@@ -379,6 +379,8 @@ public class GameLogic {
 			    				// Stores the runners location
 			    				Location runnerLocation = runner.getLocation();
 			    				
+			    				// Creates a variable to store if the player is in the nether
+		    					boolean inNether = false;
 			    				// Runs if the player is not in the overworld
 			    				if (!runnerLocation.getWorld().getEnvironment().equals(World.Environment.NORMAL)) {
 			    					// Gets the world team
@@ -391,6 +393,8 @@ public class GameLogic {
 				    				if (runnerLocation.getWorld().getEnvironment().equals(World.Environment.NETHER)) {
 					    				// Sets the world to the nether
 					    				worldTeam.setSuffix("Nether");
+					    				// Stores that the player is in the nether
+					    				inNether = true;
 				    				}
 				    				// Runs if the player is in the end
 				    				else if (runnerLocation.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
@@ -406,6 +410,8 @@ public class GameLogic {
 			    					if (infoBoard.getScore(ChatColor.AQUA + "World: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "World: ");
 			    				}
 			    				
+			    				// Creates the variable to be sent to the players
+			    				String message = "";
 			    				// Runs if the player is not in the end
 			    				if (!runnerLocation.getWorld().getEnvironment().equals(World.Environment.THE_END)) {
 			    					// Gets the x coord team
@@ -440,6 +446,13 @@ public class GameLogic {
 				    				zCoordTeam.setSuffix(runnerLocation.getBlockZ() + "");
 				    				// Sets the score for the entry to display it in the objective
 				    				infoBoard.getScore(ChatColor.AQUA + "Z: ").setScore(8);
+				    				
+				    				// Sets the message to be sent to the players
+				    				message = ChatColor.GOLD + "" + ChatColor.BOLD + "[StS] " + ChatColor.RESET + "Location: " + runnerLocation.getBlockX() + ", " + runnerLocation.getBlockY() + ", " + runnerLocation.getBlockZ();
+				    				// Adds the world if needed
+				    				if (inNether) message += " in the Nether";
+				    				// Adds a full stop for better formating
+				    				message += ".";
 			    				}
 			    				// Runs if the player is in the end
 			    				else {
@@ -455,6 +468,8 @@ public class GameLogic {
 			    				for (Player player : Bukkit.getOnlinePlayers()) {
 			    					// Sends an action bar to let the player know the location has been revealed
 			    					player.sendActionBar(ChatColor.GOLD + "The runner's location has been revealed.");
+			    					// Sends the message to the player
+			    					player.sendMessage(message);
 			    					// Plays a sound to draw attention to the location reveal
 			    					player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.VOICE, 10F, 1F);
 			    				}
