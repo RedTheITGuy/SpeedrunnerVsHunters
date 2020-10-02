@@ -87,7 +87,9 @@ public class EventListener implements Listener {
 				// Gets the class for spawning the player
 				SpawnManager spawner = new SpawnManager();
 				// Sets the spawn location
-				spawner.spawnPlayer(player, world);				
+				spawner.spawnPlayer(player, world);		
+				// Resets the compass location for the player
+				player.setCompassTarget(world.getSpawnLocation());
 			}
 		}
 		// Runs if the player is joining a non game world
@@ -126,6 +128,11 @@ public class EventListener implements Listener {
 				Team huntersTeam = scoreboard.getTeam("hunters");
 				// Adds the player to the hunters team if it exists
 				if (huntersTeam != null) huntersTeam.addEntry(player.getName());
+				
+				// Gets the player compass class
+				PlayerCompass playerCompass = new PlayerCompass();
+				// Sets the player's compass location
+				playerCompass.Set(player);
 			}
 			// Runs if the player is the runner and there is a boss bar
 			else if (bossBar != null) {
@@ -460,13 +467,17 @@ public class EventListener implements Listener {
 					if (infoBoard.getScore(ChatColor.AQUA + "Portal Y: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Portal Y: ");
 					// Deletes the portal z if it exists
 					if (infoBoard.getScore(ChatColor.AQUA + "Portal Z: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Portal Z: ");
-					
+
+					// Gets the player compass class
+					PlayerCompass playerCompass = new PlayerCompass();
 					// Runs for every player
     				for (Player currentPlayer : Bukkit.getOnlinePlayers()) {
     					// Sends an action bar to let the player know the player has left the nether
     					currentPlayer.sendActionBar(ChatColor.GOLD + "The runner has left the nether.");
     					// Plays a sound to draw attention to the dimension change
     					currentPlayer.playSound(currentPlayer.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.VOICE, 10F, 1F);
+    					// Sets the player's compass location
+    					playerCompass.Set(currentPlayer);
     				}
 				}
 			}
@@ -554,12 +565,16 @@ public class EventListener implements Listener {
     				// Sets the score for the entry to display it in the objective
     				infoBoard.getScore(ChatColor.AQUA + "Portal Z: ").setScore(4);
 					
+					// Gets the player compass class
+					PlayerCompass playerCompass = new PlayerCompass();
 					// Runs for every player
     				for (Player currentPlayer : Bukkit.getOnlinePlayers()) {
     					// Sends an action bar to let the player know the player has entered the nether
     					currentPlayer.sendActionBar(ChatColor.GOLD + "The runner has entered the nether.");
     					// Plays a sound to draw attention to the dimension change
     					currentPlayer.playSound(currentPlayer.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.VOICE, 10F, 1F);
+    					// Sets the player's compass location
+    					playerCompass.Set(currentPlayer);
     				}
 				}
 			}
@@ -662,13 +677,17 @@ public class EventListener implements Listener {
     				KeyedBossBar bossBar = Bukkit.getServer().getBossBar(barKey);
     				// Removes the boss bar if it exists
     				if (bossBar != null) bossBar.setVisible(false);
-    				
+
+					// Gets the player compass class
+					PlayerCompass playerCompass = new PlayerCompass();
 					// Runs for every player
     				for (Player currentPlayer : Bukkit.getOnlinePlayers()) {
     					// Sends an action bar to let the player know the player has entered the end
     					currentPlayer.sendActionBar(ChatColor.GOLD + "The runner has entered the end.");
     					// Plays a sound to draw attention to the dimension change
     					currentPlayer.playSound(currentPlayer.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, SoundCategory.VOICE, 10F, 1F);
+    					// Sets the player's compass location
+    					playerCompass.Set(currentPlayer);
     				}
 				}
 			}

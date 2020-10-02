@@ -140,6 +140,9 @@ public class GameEnder {
 			}
 			// Plays a sound to draw attention to the start of the game
 			player.playSound(player.getLocation(), gameOverSound, SoundCategory.VOICE, 10F, 1F);
+			
+			// Resets the compass location for the player
+			player.setCompassTarget(player.getWorld().getSpawnLocation());
 		}
 	}
 	
@@ -215,6 +218,9 @@ public class GameEnder {
 			player.sendTitle(ChatColor.GOLD + "The Hunters Win!", ChatColor.AQUA + "The game was forfeited.", 10, 70, 20);
 			// Plays a sound to draw attention to the start of the game
 			player.playSound(player.getLocation(), Sound.ENTITY_GHAST_HURT, SoundCategory.VOICE, 10F, 1F);
+			
+			// Resets the compass location for the player
+			player.setCompassTarget(player.getWorld().getSpawnLocation());
 		}
 	}
 }

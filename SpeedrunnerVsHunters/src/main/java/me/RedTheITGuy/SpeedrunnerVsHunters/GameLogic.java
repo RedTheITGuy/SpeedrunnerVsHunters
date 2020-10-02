@@ -464,6 +464,9 @@ public class GameLogic {
 			    					if (infoBoard.getScore(ChatColor.AQUA + "Z: ").isScoreSet()) scoreboard.resetScores(ChatColor.AQUA + "Z: ");
 			    				}
 			    				
+			    				// Gets the player compass class
+			    				PlayerCompass playerCompass = new PlayerCompass();
+			    				
 			    				// Runs for every player
 			    				for (Player player : Bukkit.getOnlinePlayers()) {
 			    					// Sends an action bar to let the player know the location has been revealed
@@ -472,6 +475,9 @@ public class GameLogic {
 			    					player.sendMessage(message);
 			    					// Plays a sound to draw attention to the location reveal
 			    					player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, SoundCategory.VOICE, 10F, 1F);
+			    					
+			    					// Sets the player's compass location
+			    					playerCompass.Set(player);
 			    				}
 					    	}
 					    	// Runs if the timer is for the reset after runner leaves
