@@ -28,5 +28,8 @@ game:
   # The time after the runner leaves the server before the game ends
   runnerLeaveTime: 2
 
+# Sets weather to allow using beds outside the overworld
+disableBedStrat: false
+
 # Sets the time until the server resets after a game is over
 resetTime: 2

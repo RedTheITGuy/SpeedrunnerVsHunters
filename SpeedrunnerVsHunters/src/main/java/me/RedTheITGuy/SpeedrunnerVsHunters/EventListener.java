@@ -13,9 +13,11 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event.Result;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerGameModeChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
@@ -723,6 +725,23 @@ public class EventListener implements Listener {
 				// Sets the player count
 				playerManager.setPlayerCount(-1);
 			}
+		}
+	}
+	
+	// Runs when the player tries to enter a bed
+	@EventHandler
+	public void onBedEnter(PlayerBedEnterEvent event) {
+		// Exits if the bed strat is not disabled
+		if (!Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters").getConfig().getBoolean("disableBedStrat")) return;
+		
+		// Runs if the player is not in the overworld
+		if (!event.getBed().getLocation().getWorld().getEnvironment().equals(Environment.NORMAL)) {
+			// Gets the player involved in the event
+			Player player = event.getPlayer();
+			// Tells the player they cannot sleep
+			player.sendMessage("You cannot sleep in this dimension.");
+			// Stops the player from using the bed
+			event.setUseBed(Result.DENY);
 		}
 	}
 }
