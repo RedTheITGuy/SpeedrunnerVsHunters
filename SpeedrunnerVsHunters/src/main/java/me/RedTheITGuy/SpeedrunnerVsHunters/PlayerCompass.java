@@ -9,7 +9,6 @@ import org.bukkit.scoreboard.ScoreboardManager;
 
 public class PlayerCompass {
 	public void Set(Player player) {
-		Bukkit.getLogger().info("Ran compass set");
 		// Gets the scoreboard manager
 		ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
 		// Gets the scoreboard
@@ -31,7 +30,6 @@ public class PlayerCompass {
 			if (scoreboard.getTeam("portalYcoord") != null) location.setY(Double.parseDouble(scoreboard.getTeam("portalYcoord").getSuffix()));
 			// Sets the z location
 			if (scoreboard.getTeam("portalZcoord") != null) location.setZ(Double.parseDouble(scoreboard.getTeam("portalZcoord").getSuffix()));
-			Bukkit.getLogger().info("Portal");
 		}
 		else if (infoBoard.getScore(ChatColor.DARK_AQUA + "Player Location:").isScoreSet()) {
 			// Sets the world if needed
@@ -42,15 +40,10 @@ public class PlayerCompass {
 			if (scoreboard.getTeam("yCoord") != null) location.setY(Double.parseDouble(scoreboard.getTeam("yCoord").getSuffix()));
 			// Sets the z location
 			if (scoreboard.getTeam("zCoord") != null) location.setZ(Double.parseDouble(scoreboard.getTeam("zCoord").getSuffix()));
-			Bukkit.getLogger().info("Player");
 		}
 		else return;
 		
-		// Logs the compass location
-		Bukkit.getLogger().info("Compass location: " + location.getWorld().getEnvironment() + ", " + location.getBlockX() + ", " + location.getBlockY() + ", " + location.getBlockZ());
-		
 		// Sets the players compass location
 		player.setCompassTarget(location);
-		Bukkit.getLogger().info("Set compass location for " + player.getName());
 	}
 }
