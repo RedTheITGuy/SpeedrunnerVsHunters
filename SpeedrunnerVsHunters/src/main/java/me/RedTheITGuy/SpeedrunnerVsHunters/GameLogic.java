@@ -311,31 +311,25 @@ public class GameLogic {
 			    				
 			    				// Gets the class for spawning the player
 			    				SpawnManager spawner = new SpawnManager();
+		    					// Creates the time to wait before running
+		    					long wait = 0;
 			    				// Runs for every player
 			    				for (Player player : Bukkit.getOnlinePlayers()) {
-			    					// Creates the time to wait before running
-			    					long wait = 0;
 			    					// Creates increasing pauses to help with lag
 		    						scheduler.scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), new Runnable() {
 		    							public void run() {
-		    								// Sends a title to the player to let them know the hunters have been released
-					    					player.sendTitle(ChatColor.GOLD + "Hunters released!", ChatColor.AQUA + "Good luck, you'll need it...", 10, 70, 20);
-					    					// Plays a sound to draw attention to the hunters release
-					    					player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.VOICE, 10F, 1F);
-					    					
 					    					// Runs if the player is not already in the game world
 					    					if (!player.getWorld().getName().contains("svh-")) {
 					    						// Gets the game world
 					    						World world = Bukkit.getWorld("svh-overworld");
 					    						// Spawns the player in the world
 					    						spawner.spawnPlayer(player, world);
-					    						// Pauses for 10 ticks later to help with lag
-					    						scheduler.scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("SpeedrunnerVsHunters"), new Runnable() {
-					    							public void run() {
-							    						Bukkit.getLogger().info("ran the delay");
-					    							}
-					    						}, 10);
 					    					}
+					    					
+		    								// Sends a title to the player to let them know the hunters have been released
+					    					player.sendTitle(ChatColor.GOLD + "Hunters released!", ChatColor.AQUA + "Good luck, you'll need it...", 10, 70, 20);
+					    					// Plays a sound to draw attention to the hunters release
+					    					player.playSound(player.getLocation(), Sound.ENTITY_WITHER_SPAWN, SoundCategory.VOICE, 10F, 1F);
 					    					
 					    					// Returns if the player is the runner
 					    					if (scoreboard.getTeam("runnerName").getSuffix().equalsIgnoreCase(player.getName())) return;
@@ -359,7 +353,7 @@ public class GameLogic {
 		    							}
 		    						}, wait);
 		    						// Increases the wait time by 10
-		    						wait += 10;
+		    						wait += 5;
 			    				}
 			    				
 			    				// Exits the method
