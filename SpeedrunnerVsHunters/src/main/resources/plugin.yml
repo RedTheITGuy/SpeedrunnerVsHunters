@@ -1,9 +1,10 @@
 name: SpeedrunnerVsHunters
-version: 0.39
+version: 1.0
 description: The plugin to run the logic for the speedrunner vs hunters Minecraft gamemode.
 main: me.RedTheITGuy.SpeedrunnerVsHunters.Main
 api-version: 1.16
 author: Red_the_IT_Guy
+website: https://github.com/RedTheITGuy/SpeedrunnerVsHunters
 load: POSTWORLD
 depend: [WorldGuard]
 commands:
@@ -19,6 +20,10 @@ commands:
     description: Teleport to a player in spectator mode
     usage: "/goto <player-name/runner>"
     permission: svh.goto
+  stopthespeedrunner:
+    description: Gives the player information about the plugin
+    usage: "/sts"
+    aliases: sts
 
 permissions:
   svh.startgame:

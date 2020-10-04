@@ -30,5 +30,6 @@ public class Main extends JavaPlugin {
 		this.getCommand("startgame").setExecutor(new CommandStartGame());
 		this.getCommand("endgame").setExecutor(new CommandEndGame());
 		this.getCommand("goto").setExecutor(new CommandGoTo());
+		this.getCommand("stopthespeedrunner").setExecutor(new CommandSts());
 	}
 }
